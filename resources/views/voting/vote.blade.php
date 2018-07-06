@@ -25,9 +25,21 @@
         </style>
 
         <div id="voting" class="container mt-3" v-bind:class="{ loading: loading }" v-cloak>
-            <div v-if="errored && error !== null" class="alert alert-danger" role="alert">
-                @{{ errorMessage }}
+            <div class="row">
+                <div class="col-12">
+                    <div v-if="errored && error !== null">
+                        <div v-if="errorMessage === 'Unauthenticated.'" class="text-center">
+                            <div>You need to be logged-in to vote!</div>
+
+                            <a href="{{ route('login') }}" class="btn btn-outline-primary" style="max-width: 250px">Log-in</a>
+                        </div>
+                        <div v-else class="alert alert-danger" role="alert">
+                            @{{ errorMessage }}
+                        </div>
+                    </div>
+                </div>
             </div>
+
 
             <div class="row" v-else-if="userHasCompletedBallot()">
                 <div class="col-12">

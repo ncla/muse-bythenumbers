@@ -22,7 +22,7 @@
 
                 <ul>
                     <li>Win-rate and rank statistics from voting displayed on song pages and big table</li>
-                    <li>Spotify play-counts</li>
+                    <li>Spotify play-counts (crowd-sourced data from users inputting it, since there's no API for it)</li>
                     <li>Spotify TOP10 index</li>
                     <li>YouTube views for songs</li>
                     <li>Improve voting loading speed</li>
