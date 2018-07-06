@@ -12,6 +12,8 @@
 </head>
 <body>
 
+<wrapper class="d-flex flex-column">
+
 <nav class="navbar navbar-expand-md border-bottom box-shadow navbar-light bg-white">
     <a class="navbar-brand" href="/">By The Numbers</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,16 +84,40 @@
     </div>
 </nav>
 
+<main class="flex-fill">
+
 @yield('content')
 
+</main>
+
 <footer class="footer bg-white border-top">
-    <div class="container">
-        <span class="text-muted">Developed by <a href="https://ncla.me">ncla</a>, © {{ date('Y') }}</span>
+    <div class="container text-muted">
+        <div class="row">
+            <div class="col-sm-6">
+                <div>Developed by <a href="https://ncla.me">ncla</a>, © {{ date('Y') }}</div>
+                <div>Data provided by setlist.fm and last.fm</div>
+            </div>
+            <div class="col-sm-6 text-sm-right">
+                @php
+                    if (Cache::get('ver')) {
+                        $ver = cache('ver');
+                    } else {
+                        $ver = App\Src\ApplicationVersion::get();
+                        Cache::put('ver', $ver, 10);
+                    }
+                @endphp
+                <div>Application version: {{ $ver }}</div>
+            </div>
+        </div>
     </div>
 </footer>
 
+</wrapper>
+
 <script src="{{ mix('js/app.js') }}"></script>
 @stack('scripts')
+
+
 
 </body>
 </html>

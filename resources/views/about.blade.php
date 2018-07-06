@@ -48,7 +48,7 @@
 
                 <p>General rank voting-ballots may exclude some song tracks to reduce the match-up count. These would be live tracks, live (non-studio) covers, variations of same song, demos, short tracks that are intros/interludes etc., or stuff you can't find officially.</p>
 
-                <p><strong>I have a problem / enquiry / feedback.</strong></p>
+                <p><strong>I have a problem / inquiry / feedback.</strong></p>
 
                 <p>/u/iamncla on Reddit or e-mail: bythenumbers [at] ncla.me</p>
             </div>
