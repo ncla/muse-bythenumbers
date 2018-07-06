@@ -29,7 +29,7 @@
                 <div class="col-12">
                     <div v-if="errored && error !== null">
                         <div v-if="errorMessage === 'Unauthenticated.'" class="text-center">
-                            <div>You need to be logged-in to vote!</div>
+                            <div><h2 class="font-weight-light text-muted">You need to be logged-in to vote!</h2></div>
 
                             <a href="{{ route('login') }}" class="btn btn-outline-primary" style="max-width: 250px">Log-in</a>
                         </div>

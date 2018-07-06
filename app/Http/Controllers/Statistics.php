@@ -29,11 +29,8 @@ class Statistics extends Controller
                     GROUP BY `track_name`
                 ) aLastFm ON `lastfm_tracks`.`track_name` = `aLastFm`.`track_name` AND `lastfm_tracks`.`created_at` = `aLastFm`.`created_at_newest`
                 ORDER BY `listeners_week` desc) as lastfm_tracks
-           '), function($join) {
-                $join->on('musicbrainz_songs.name_lastfm_override', '=', 'lastfm_tracks.track_name')
-                    ->orOn('musicbrainz_songs.name_override', '=', 'lastfm_tracks.track_name')
-                    ->orOn('musicbrainz_songs.name', '=', 'lastfm_tracks.track_name');
-            })
+           '), 'lastfm_tracks.track_name', '=',
+                    DB::raw('COALESCE(musicbrainz_songs.name_lastfm_override, musicbrainz_songs.name_override, musicbrainz_songs.name)'))
             ->leftJoin(DB::raw('(' . DB::table('setlist_songs')
                 ->select('setlist_songs.name', 'setlists.date', DB::raw('COUNT(*) as playcount'), DB::raw('MAX(setlists.date) as last_played'))
                 ->addSelect($years->map(function ($year) {
@@ -41,11 +38,9 @@ class Statistics extends Controller
                 })->toArray())
                 ->join('setlists', 'setlist_songs.id', 'setlists.id')
                 ->groupBy(['setlist_songs.name'])
-                ->toSql() . ') AS performances'), function($join) {
-                    $join->on('musicbrainz_songs.name_setlistfm_override', '=', 'performances.name')
-                        ->orOn('musicbrainz_songs.name_override', '=', 'performances.name')
-                        ->orOn('musicbrainz_songs.name', '=', 'performances.name');
-                })
+                ->toSql() . ') AS performances'), 'performances.name', '=',
+                    DB::raw('COALESCE(musicbrainz_songs.name_setlistfm_override, musicbrainz_songs.name_override, musicbrainz_songs.name)'))
+            ->where('musicbrainz_songs.is_utilized', '=', '1')
             ->orderBy('musicbrainz_songs.name')
             ->get();
 

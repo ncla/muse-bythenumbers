@@ -9,7 +9,7 @@
                 <h1>About</h1>
 
                 <p>
-                    ByTheNumbers is made by ncla (/u/iamncla) and is suppose to be <a href="http://firepip.com/MuseSongRatings/results/">a follow up site to firepip's ranking site</a>, where users could vote on song match-ups, just like this one, and then see results in a big table along with other statistics. Then the goal is to use all the statistics on this site to guide any upcoming by-request gig votings (because go statistics, wow).
+                    ByTheNumbers is made by ncla (/u/iamncla) and is suppose to be <a href="http://firepip.com/MuseSongRatings/results/">a follow up site to firepip's ranking site</a>, where users could vote on song match-ups, just like this one, and then see results in a big table along with other statistics. Then the goal is to use all the statistics on this site to guide any upcoming by-request gig votings (because go statistics, wow). Or to dispute a heated argument about which song is better than other..
                 </p>
 
                 <p>
