@@ -25,9 +25,9 @@
         </style>
 
         <div id="voting" class="container mt-3" v-bind:class="{ loading: loading }" v-cloak>
-            <div class="row">
+            <div class="row" v-if="errored && error !== null">
                 <div class="col-12">
-                    <div v-if="errored && error !== null">
+                    <div>
                         <div v-if="errorMessage === 'Unauthenticated.'" class="text-center">
                             <div><h2 class="font-weight-light text-muted">You need to be logged-in to vote!</h2></div>
 
