@@ -71,8 +71,10 @@
                                     <iframe id="songA_frame" :src="getSpotifyEmbedURL(voteData.matchup.songs[0].spotify_track_id)" v-if="voteData && voteData.matchup.songs[0].spotify_track_id"
                                             height="80" frameborder="0" allowtransparency="true" allow="encrypted-media" v-on:load="iframeLoaded(0)"
                                             v-show="!loading && !iframesLoading[0]"></iframe>
-                                    <div v-else class="container">
-                                        No Spotify preview available
+                                    <div v-else class="no-spotify-preview container align-items-center justify-content-center">
+                                        <div class="row align-items-center justify-content-center h-100">
+                                            No Spotify preview available
+                                        </div>
                                     </div>
                                 </div>
                             </div>
