@@ -47,11 +47,16 @@ class Songs extends Model
 
     public function getSetlistNameAttribute()
     {
-        return $this->setlist_name_override ?? $this->name_override ?? $this->name;
+        return $this->name_setlistfm_override ?? $this->name_override ?? $this->name;
     }
 
     public function getLastfmNameAttribute()
     {
-        return $this->lastfm_name_override ?? $this->name_override ?? $this->name;
+        return $this->name_lastfm_override ?? $this->name_override ?? $this->name;
+    }
+
+    public function getSpotifyNameAttribute()
+    {
+        return $this->name_spotify_override ?? $this->name_override ?? $this->name;
     }
 }

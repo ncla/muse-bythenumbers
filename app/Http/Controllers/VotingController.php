@@ -41,9 +41,6 @@ class VotingController extends Controller
             ->with('ballot', $ballot);
     }
 
-    /*
-     * TODO: Add expires_on and is_open checks
-     */
     public function vote($id, CreateVote $request)
     {
         $ballot = Voting::findOrFail($id);
@@ -63,8 +60,6 @@ class VotingController extends Controller
         }
 
         $matchup = $this->votingService->getMatchUp($ballot->id, Auth::user()->id);
-
-        //dump($matchup->toArray()); return 1;
 
         $totalMatchUps = DB::table('voting_matchups')
                             ->select(DB::raw('COUNT(*) AS count'))

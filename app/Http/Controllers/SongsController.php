@@ -14,8 +14,6 @@ class SongsController extends Controller
     {
         $song = Songs::findOrFail($id);
 
-        //dump($song->toArray());
-
         $setlistApperances = DB::table('setlist_songs')
                                 ->select('setlist_songs.name', DB::raw('COUNT(*) as playcount'), DB::raw('YEAR(setlists.date) as year'))
                                 ->where('name', $song->setlistName)
@@ -56,8 +54,6 @@ class SongsController extends Controller
                                     ->where('A.name', $song->setlistName)
                                     ->where('setlists.is_utilized', '=', 1)
                                     ->get();
-
-        //dump($lookAroundSongsSetlist);
 
         $previousOnly = $lookAroundSongsSetlist->groupBy('previous')->sortByDesc(function ($entries) {
             return count($entries);
