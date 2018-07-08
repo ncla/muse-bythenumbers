@@ -64,6 +64,10 @@ $loadingGradientColor: #f4f4f4;
   .progress {
     height: 25px;
     font-size: 0.75rem;
+
+    .progress-bar {
+      background-color: rgba(17, 147, 255, 0.36);
+    }
   }
 
   .spotify-preview {

@@ -10,12 +10,16 @@
 
         <h4>{{ $ballot->name }} <span class="badge badge-secondary">{{ title_case($ballot->type) }}</span></h4>
 
+        <div class="text-muted">
+            <strong>Description: </strong>{{ $ballot->description }}
+        </div>
+
         <span class="text-muted">
-            {{ $ballot->description }}
+            There are many match-ups to vote for. You can vote for as many as you want until you ran out of match-ups, and you can stop and resume at any moment you like, your progress is tied to your account. The more you vote, the more worth your votes will in the ranking.
         </span>
 
         <span class="text-muted">
-            There are many match-ups to vote for. You can vote for as many as you want until you ran out of match-ups, and you can stop and resume at any moment you like!
+            You can use arrow keys on your key-board. Left arrow key for the song on the left (or the first one on the screen), right arrow button for the second song (right/bottom, depending on screen size).
         </span>
 
         <style>
@@ -52,8 +56,17 @@
             <div v-else>
 
                 <div class="row mb-2">
-                    <div class="progress w-100">
-                        <div class="progress-bar" role="progressbar" v-bind:style="{ width: votingProgressPercentage + '%'}" v-bind:aria-valuenow="votingProgressPercentage" aria-valuemin="0" aria-valuemax="100">@{{ votingProgressPercentage }}%</div>
+                    <div class="progress w-100 position-relative">
+                        <div class="progress-bar" role="progressbar" v-bind:style="{ width: votingProgressPercentage + '%'}" v-bind:aria-valuenow="votingProgressPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="justify-content-center d-flex position-absolute w-100 h-100 align-items-center">
+                            <div class="d-flex">
+                                <span class="voting-progress-text">
+                                    @{{ votingProgressPercentage }}% complete
+                                    <span v-if="votingProgress !== null"> (@{{ votingProgress.votes_submitted }} / @{{ votingProgress.votes_total }})</span>
+                                </span>
+                            </div>
+                        </div>
+                        {{--<span></span>--}}
                     </div>
                 </div>
 

@@ -30,6 +30,7 @@
                     <li>Futher expand on set-list pages, e.g. display song staleness in set-list, last time song was played before x gig</li>
                     <li>Searching set-lists (allow searching based on notes e.g. outro rifs)</li>
                     <li>Allow users to pick setlists they have been to, and then generate some statistics based on that</li>
+                    <li>View your own voting history and statistics for a voting ballot</li>
                 </ul>
 
                 <h2>FAQ</h2>
@@ -38,19 +39,23 @@
 
                 <p><strong>How much do I have to vote?</strong></p>
 
-                <p>It's up to you. The total we are looking for is what firepip had - 50,000 votes. You don't have to do it in one sitting, do it as a side-task e.g. when you are on commute and have nothing better to do, so you spend a few minutes on voting.</p>
-
-                <p><strong>How many match-ups are there in total?</strong></p>
-
-                <p>I prefer not to reveal this as it might be too overwhelming/discouraging for some, but you can do the math yourself.</p>
+                <p>It's up to you. The total we are looking for is what firepip had - 50,000 votes. You don't have to do it in one sitting, do it as a side-task e.g. when you are on commute and have nothing better to do, so you spend a few minutes on voting. If you need a goal, then 20% is good enough. Users who vote the most, will get their votes weighted more in the ranking!</p>
 
                 <p><strong>Where is X song?</strong></p>
 
                 <p>General rank voting-ballots may exclude some song tracks to reduce the match-up count. These would be live tracks, live (non-studio) covers, variations of same song, demos, short tracks that are intros/interludes etc., or stuff you can't find officially.</p>
 
+                <p><strong>Why can't I see the statistics for the voting ballot now?</strong></p>
+
+                <p>If I expose the statistics right now, then some users would be voting on match-ups based on how the song is currently doing in the ranking. I do however plan to add personal statistics and voting history for each voting ballot, so you don't have to wait for the voting to complete.</p>
+
                 <p><strong>I have a problem / inquiry / feedback.</strong></p>
 
                 <p>/u/iamncla on Reddit or e-mail: bythenumbers [at] ncla.me</p>
+
+                {{--<p><strong></strong></p>--}}
+
+                {{--<p></p>--}}
             </div>
         </div>
 
