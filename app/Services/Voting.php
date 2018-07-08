@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Voting\Matchups;
 use App\Models\Voting\Songs;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Src\Rating;
 
@@ -12,11 +13,14 @@ class Voting
 
     public static function getMatchUp($votingBallotID, $userID)
     {
+        // Query written so less voted matchups get priority
         return Matchups::select('voting_matchups.*', 'votesOne.*', 'votesTwo.*', DB::raw('IFNULL(`votesTwo`.`count`, 0) AS `vote_count`'))
+            // votesOne is for getting all submitted votes by user_id
             ->leftJoin(DB::raw('(SELECT `user_id`, `voting_matchup_id` FROM `votes` WHERE `user_id` = ' . $userID .') AS votesOne'),
                 function($join) {
                     $join->on('votesOne.voting_matchup_id', '=', 'voting_matchups.id');
                 })
+            // votesTwo is used to get COUNT for voting matchups for determining which matchup needs a vote (so all matchups are voted evenly)
             ->leftJoin(DB::raw('(SELECT `voting_matchup_id`, COUNT(*) as `count` FROM `votes` GROUP BY `voting_matchup_id`) AS votesTwo'),
                 function($join) {
                     $join->on('votesTwo.voting_matchup_id', '=', 'voting_matchups.id');

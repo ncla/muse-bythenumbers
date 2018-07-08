@@ -123,10 +123,6 @@
                     </div>
                 </div>
 
-                {{--<div>--}}
-                    {{--@{{ JSON.stringify(votingProgress) }} @{{ votingProgressPercentage }}--}}
-                {{--</div>--}}
-
             </div>
         </div>
 
@@ -139,7 +135,6 @@
                 }, false);
 
                 $('.btn').mousedown(function(e){
-                    console.log(7);
                     e.preventDefault();
                 });
 
@@ -166,11 +161,11 @@
                             this.loading = true;
                             this.iframesLoading[0] = this.iframesLoading[1] = true;
 
+                            document.removeEventListener('keyup', this.keyPressed);
+
                             var postData = {};
 
                             if (votedOn !== null) {
-                                console.log(this.voteData);
-
                                 postData = {
                                     'voting_matchup_id': this.$data.voteData.matchup.matchup_data.id,
                                     'voted_on': votedOn
@@ -182,6 +177,10 @@
                             return axios.post('/voting-ballots/{{$ballot->id}}/vote', postData).then(response => {
                                 this.voteData = response.data;
                                 this.loading = false;
+
+                                if (this.voteData.matchup.matchup_data !== null) {
+                                    document.addEventListener('keyup', this.keyPressed);
+                                }
 
                                 this.votingProgress = response.data.user_voting_progress;
                             })
@@ -196,19 +195,19 @@
                             return 'https://open.spotify.com/embed?uri=spotify:track:' + trackID + '&theme=white';
                         },
                         iframeLoaded(index) {
-                            console.log(index);
                             this.iframesLoading[index] = false;
                         },
                         userHasCompletedBallot() {
-
-
-                            var t = this.voteData !== null && this.voteData.user_voting_progress.votes_total === this.voteData.user_voting_progress.votes_submitted;
-                            console.log(t);
-                            return t;
+                            return this.voteData !== null && this.voteData.user_voting_progress.votes_total === this.voteData.user_voting_progress.votes_submitted;
                         },
-                        voteMouseDown(event) {
-                            console.log(7, event);
-                            event.preventDefault();
+                        keyPressed(evt) {
+                            if (evt.keyCode === 37) {
+                                this.sendVote(this.voteData.matchup.songs[0].id);
+                            }
+
+                            if (evt.keyCode === 39) {
+                                this.sendVote(this.voteData.matchup.songs[1].id);
+                            }
                         }
                     },
                     computed: {
@@ -226,7 +225,7 @@
                                             msg += ' ' + keyErrors[i];
                                         }
 
-                                        console.log(key, this.error.errors[key]);
+                                        // console.log(key, this.error.errors[key]);
                                     }, this, msg);
                                 }
                             } catch(e) { }
