@@ -179,7 +179,7 @@
 
                             this.voteData = null;
 
-                            return axios.post('/voting-ballots/{{$ballot->id}}/vote-test', postData).then(response => {
+                            return axios.post('/voting-ballots/{{$ballot->id}}/vote', postData).then(response => {
                                 this.voteData = response.data;
                                 this.loading = false;
 
