@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Debugbar;
 use App\Services\Voting as VotingService;
 use Carbon\Carbon;
+use Flash;
 
 class VotingController extends Controller
 {
@@ -33,8 +34,6 @@ class VotingController extends Controller
 
     public function show($id)
     {
-        //dump($id);
-
         $ballot = Voting::findOrFail($id);
 
         return view('voting.vote')
@@ -94,5 +93,28 @@ class VotingController extends Controller
                 'votes_total' => $totalMatchUps
             ]
         ]);
+    }
+
+    public function me($id, Request $request)
+    {
+        //DB::select('SET SESSION query_cache_type=0;');
+
+        $ballot = Voting::findOrFail($id);
+
+        $votesTotal = VotingService::getTotalVotes($id, Auth::id());
+
+        if ($votesTotal->count < 50) {
+            Flash::error('You do not have enough votes. Please vote and come back later again.')->important();
+
+            return redirect(action('VotingController@show', ['id' => $id]));
+        }
+
+        $stats = VotingService::calculateStatsFromVotes($id, 5);
+
+        //dump($stats);
+
+        return view('voting.me')
+            ->with('ballot', $ballot)
+            ->with('stats', $stats);
     }
 }

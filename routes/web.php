@@ -23,10 +23,9 @@ Route::get('/members/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/voting-ballots/', 'VotingController@index');
 Route::get('/voting-ballots/{id}', 'VotingController@show');
-Route::get('/voting-ballots/{id}/vote', 'VotingController@show');
 Route::post('/voting-ballots/{id}/vote', 'VotingController@vote')->middleware('auth');
 Route::get('/voting-ballots/{id}/vote-debug', 'VotingController@vote')->middleware('auth');
-
+Route::get('/voting-ballots/{id}/me', 'VotingController@me')->middleware('auth');
 
 Route::get('songs/{id}', 'SongsController@show');
 

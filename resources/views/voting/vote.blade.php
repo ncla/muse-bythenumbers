@@ -6,6 +6,8 @@
 
         <h2>Voting</h2>
 
+        @include('flash::message')
+
         <hr/>
 
         <h4>{{ $ballot->name }} <span class="badge badge-secondary">{{ title_case($ballot->type) }}</span></h4>
