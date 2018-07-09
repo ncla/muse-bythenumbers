@@ -109,7 +109,7 @@ class VotingController extends Controller
             return redirect(action('VotingController@show', ['id' => $id]));
         }
 
-        $stats = VotingService::calculateStatsFromVotes($id, 5);
+        $stats = VotingService::calculateStatsFromVotes($id, Auth::id());
 
         //dump($stats);
 
