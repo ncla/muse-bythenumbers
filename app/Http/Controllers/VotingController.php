@@ -95,26 +95,41 @@ class VotingController extends Controller
         ]);
     }
 
-    public function me($id, Request $request)
+    public function mystats($id, Request $request)
     {
-        //DB::select('SET SESSION query_cache_type=0;');
-
         $ballot = Voting::findOrFail($id);
 
         $votesTotal = VotingService::getTotalVotes($id, Auth::id());
 
-        if ($votesTotal->count < 50) {
-            Flash::error('You do not have enough votes. Please vote and come back later again.')->important();
+        if ($votesTotal->count === 0) {
+            Flash::error('You do not have any votes. Please vote and come back later again.')->important();
 
             return redirect(action('VotingController@show', ['id' => $id]));
         }
 
         $stats = VotingService::calculateStatsFromVotes($id, Auth::id());
 
-        //dump($stats);
-
-        return view('voting.me')
+        return view('voting.mystats')
             ->with('ballot', $ballot)
             ->with('stats', $stats);
+    }
+
+    public function myhistory($id, Request $request)
+    {
+        $ballot = Voting::findOrFail($id);
+
+        $votesTotal = VotingService::getTotalVotes($id, Auth::id());
+
+        if ($votesTotal->count === 0) {
+            Flash::error('You do not have any votes. Please vote and come back later again.')->important();
+
+            return redirect(action('VotingController@show', ['id' => $id]));
+        }
+
+        $history = VotingService::getVotingHistory($id, Auth::id());
+
+        return view('voting.myhistory')
+            ->with('ballot', $ballot)
+            ->with('history', $history);
     }
 }

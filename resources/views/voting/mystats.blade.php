@@ -6,18 +6,19 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="float-left">
-                    <h2>Personal Voting Statistics</h2>
-                </div>
-                <div class="float-right">
-                    <a href="{{ action('VotingController@show', ['id' => request()->route('id')]) }}" class="btn btn-primary pull-right btn-sm">Back</a>
-                </div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ action('VotingController@index') }}">Voting Ballots</a></li>
+                        <li class="breadcrumb-item">
+                            <a href="{{ action('VotingController@show', ['id' => request()->route('id')]) }}">{{ $ballot->name }}</a> <span class="badge badge-secondary">{{ title_case($ballot->type) }}</span>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            My Voting Statistics
+                        </li>
+                    </ol>
+                </nav>
             </div>
         </div>
-
-        <hr/>
-
-        <h4>{{ $ballot->name }} <span class="badge badge-secondary">{{ title_case($ballot->type) }}</span></h4>
 
         <div class="table-responsive">
             <table class="table table-bordered table-sm table-hover table-xs dt-responsive" id="personalStats">
@@ -53,7 +54,7 @@
                             [25, 50, 100, 200, -1],
                             [25, 50, 100, 200, "All"]
                         ],
-                        iDisplayLength: -1
+                        iDisplayLength: 25
                     });
                 });
             </script>
