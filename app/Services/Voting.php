@@ -87,6 +87,7 @@ class Voting
             $item->won = 0;
             $item->lost = 0;
             $item->rank = 1000;
+            $item->totalVotes = 0;
 
             return $item;
         });
@@ -137,6 +138,8 @@ class Voting
             } else {
                 $allSongsStats[$allSongsStatsKey]->winrate = ($allSongsStats[$allSongsStatsKey]->won / $totalVotes) * 100;
             }
+
+            $allSongsStats[$allSongsStatsKey]->totalVotes = $totalVotes;
         }
 
         \Debugbar::stopMeasure('allVotes_each2');
@@ -144,12 +147,30 @@ class Voting
         return $allSongsStats;
     }
 
+    public static function getVoteDistribution($votingBallotID)
+    {
+        return DB::table(with(new Matchups())->getTable())
+            ->select('voting_matchups.id', DB::raw('IFNULL(`votesTwo`.`count`, 0) AS `count`'), 'songA.name AS songA_name', 'songB.name AS songB_name',
+                'songA.id AS songA_id', 'songB.id AS songB_id')
+            ->leftJoin(DB::raw('(SELECT `voting_matchup_id`, COUNT(*) as `count` FROM `votes` GROUP BY `voting_matchup_id`) AS votesTwo'),
+                function($join) {
+                    $join->on('votesTwo.voting_matchup_id', '=', 'voting_matchups.id');
+                })
+            ->join('musicbrainz_songs AS songA', 'songA.id', '=', 'voting_matchups.songA_id')
+            ->join('musicbrainz_songs AS songB', 'songB.id', '=', 'voting_matchups.songB_id')
+            ->where('voting_ballot_id', $votingBallotID)
+            ->groupBy('voting_matchups.id')
+            ->orderBy('count', 'desc')
+            ->get();
+    }
+
     public static function getVotingHistory($votingBallotID, $userID = null)
     {
         $votes =  Votes::select(DB::raw('COALESCE(songA.name_override, songA.name) AS songA_name'), DB::raw('COALESCE(songB.name_override, songB.name) AS songB_name'),
             DB::raw('COALESCE(winner_song.name_override, winner_song.name) AS winner_name'),
             'voting_matchups.songA_id', 'voting_matchups.songB_id', 'votes.winner_song_id', 'votes.created_at', 'votes.user_id')
-            ->join('voting_matchups', 'votes.voting_matchup_id', '=', 'voting_matchups.id')->join('musicbrainz_songs AS songA', 'songA.id', '=', 'voting_matchups.songA_id')
+            ->join('voting_matchups', 'votes.voting_matchup_id', '=', 'voting_matchups.id')
+            ->join('musicbrainz_songs AS songA', 'songA.id', '=', 'voting_matchups.songA_id')
             ->join('musicbrainz_songs AS songB', 'songB.id', '=', 'voting_matchups.songB_id')
             ->join('musicbrainz_songs AS winner_song', 'winner_song.id', '=', 'votes.winner_song_id')
             ->where('voting_matchups.voting_ballot_id', $votingBallotID);

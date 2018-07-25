@@ -123,22 +123,14 @@ class VotingController extends AppBaseController
             return redirect(route('votings.index'));
         }
 
-
-        // Eloquent hasMany is taxing here
-        $votes = Voting\Matchups::where('voting_ballot_id', $id)->get();
-
-        $votes = $votes->map(function ($item, $key) {
-            $item->count = count($item->votes()->get());
-            return $item;
-        });
-
-        $votes = $votes->sortByDesc('count');
+        $voteDistribution = \App\Services\Voting::getVoteDistribution($id);
 
         $ranks = \App\Services\Voting::calculateStatsFromVotes($id);
+
         $ranks = $ranks->sortByDesc('winrate');
 
         return view('admin.votings.stats')
-            ->with('matchups', $votes)
+            ->with('matchups', $voteDistribution)
             ->with('ranks', $ranks);
     }
 
