@@ -164,6 +164,14 @@ class Voting
             ->get();
     }
 
+    public static function getVoteCountsForAllUsers($votingBallotID)
+    {
+        return Votes::select('votes.user_id', 'users.username', DB::raw('COUNT(*) as count'))
+            ->join('users', 'votes.user_id', '=', 'users.id')
+            ->groupBy('user_id')
+            ->get();
+    }
+
     public static function getVotingHistory($votingBallotID, $userID = null)
     {
         $votes =  Votes::select(DB::raw('COALESCE(songA.name_override, songA.name) AS songA_name'), DB::raw('COALESCE(songB.name_override, songB.name) AS songB_name'),

@@ -129,8 +129,11 @@ class VotingController extends AppBaseController
 
         $ranks = $ranks->sortByDesc('winrate');
 
+        $userVotes = \App\Services\Voting::getVoteCountsForAllUsers($id)->sortByDesc('count');
+
         return view('admin.votings.stats')
             ->with('matchups', $voteDistribution)
+            ->with('votes_user', $userVotes)
             ->with('ranks', $ranks);
     }
 
@@ -191,7 +194,7 @@ class VotingController extends AppBaseController
             return redirect(route('votings.index'));
         }
 
-        dump($request->all());
+//        dump($request->all());
 
         $voting = $this->votingRepository->update($request->all(), $id);
 
@@ -215,14 +218,14 @@ class VotingController extends AppBaseController
             return $item['song_id'];
         });
 
-        dump('new song list', $newSongList, 'oldsonglist', $oldSongList);
+//        dump('new song list', $newSongList, 'oldsonglist', $oldSongList);
 
         $songAdditions = $newSongList
             ->diff($oldSongList);
 
         $songRemovals = $oldSongList->diff($newSongList);
 
-        dump($songAdditions, $songRemovals);
+//        dump($songAdditions, $songRemovals);
 
         DB::table('voting_ballot_songs')
             ->where('voting_ballot_id', $id)

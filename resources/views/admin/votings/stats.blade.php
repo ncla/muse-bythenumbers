@@ -12,8 +12,6 @@
                         <h1 class="pull-left">Voting Stats</h1>
                 </div>
 
-
-
                 <div class="row">
                         <div class="col-12">
 
@@ -44,6 +42,33 @@
                 </div>
 
 
+                <div class="row">
+                        <h1 class="pull-left">User Vote Counts</h1>
+                </div>
+
+                <div class="row">
+                        <div class="col-12">
+
+                                <table class="table table-bordered table-sm table-hover table-xs dt-responsive" id="stats">
+                                        <thead>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Votes</th>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($votes_user as $user)
+                                                <tr>
+                                                        <td>{!! $user->user_id !!}</td>
+                                                        <td>{{ $user->username }}</td>
+                                                        <td>{{ $user->count }}</td>
+                                                </tr>
+                                        @endforeach
+                                        </tbody>
+                                </table>
+
+                        </div>
+                </div>
+
                 @push('scripts')
                         <script>
                             $(document).ready(function () {
@@ -58,26 +83,33 @@
                         </script>
                 @endpush
 
-                <h1 class="pull-left">Vote Distribution</h1>
+                <div class="row">
+                        <h1 class="pull-left">Vote Distribution</h1>
+                </div>
 
-                <table class="table table-bordered table-sm table-hover table-xs dt-responsive" id="votings-table">
-                        <thead>
-                        <th>ID</th>
-                        <th>Song A</th>
-                        <th>Song B</th>
-                        <th>Count</th>
-                        </thead>
-                        <tbody>
-                        @foreach($matchups as $matchup)
-                                <tr>
-                                        <td>{!! $matchup->id !!}</td>
-                                        <td>{{ $matchup->songA_name }} [{!! $matchup->songA_id !!}]</td>
-                                        <td>{{ $matchup->songB_name }} [{!! $matchup->songB_id !!}]</td>
-                                        <td>{!! $matchup->count !!}</td>
-                                </tr>
-                        @endforeach
-                        </tbody>
-                </table>
+
+                <div class="row">
+                        <div class="col-12">
+                                <table class="table table-bordered table-sm table-hover table-xs dt-responsive" id="votings-table">
+                                        <thead>
+                                        <th>ID</th>
+                                        <th>Song A</th>
+                                        <th>Song B</th>
+                                        <th>Count</th>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($matchups as $matchup)
+                                                <tr>
+                                                        <td>{!! $matchup->id !!}</td>
+                                                        <td>{{ $matchup->songA_name }} [{!! $matchup->songA_id !!}]</td>
+                                                        <td>{{ $matchup->songB_name }} [{!! $matchup->songB_id !!}]</td>
+                                                        <td>{!! $matchup->count !!}</td>
+                                                </tr>
+                                        @endforeach
+                                        </tbody>
+                                </table>
+                        </div>
+                </div>
 
         </div>
 
