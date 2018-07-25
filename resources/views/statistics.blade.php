@@ -2,23 +2,30 @@
 
 @section('content')
 
-    {{--<link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>--}}
-    {{--<link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css"/>--}}
-    {{--<link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css"/>--}}
-    {{--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.css"/>--}}
-
-
     @push('scripts')
-        {{--<script type="text/javascript" src="{{ mix('js/datatable.js') }}"></script>--}}
         <script>
             $(document).ready(function () {
-                $('#mainStatisticsTable').DataTable({
+                var t = $('#mainStatisticsTable').DataTable({
                     aLengthMenu: [
                         [25, 50, 100, 200, -1],
                         [25, 50, 100, 200, "All"]
                     ],
-                    iDisplayLength: -1
+                    iDisplayLength: -1,
+                    columnDefs: [{
+                        searchable: false,
+                        orderable: false,
+                        targets: 0
+                    }],
+                    order: [[1, 'asc']]
                 });
+
+                // https://stackoverflow.com/questions/33432115/jquery-datatables-static-rownumber
+                t.on('order.dt search.dt', function () {
+                    t.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                        cell.innerHTML = i + 1;
+                    });
+                }).draw();
+
             });
         </script>
     @endpush
@@ -28,6 +35,7 @@
             <table class="table table-bordered table-sm table-hover table-xs dt-responsive" id="mainStatisticsTable">
                 <thead class="thead-light">
                 <tr>
+                    <th scope="col">#</th>
                     <th scope="col">Name</th>
                     {{--<th scope="col">MBID</th>--}}
                     <th scope="col">LastFM Listeners</th>
@@ -41,6 +49,7 @@
                 <tbody>
                 @foreach($works as $work)
                     <tr>
+                        <td>{{ $loop->index + 1 }}</td>
                         <td><a href="/songs/{{ $work->id }}">{{ $work->name_final }}</a></td>
                         {{--<td><a href="https://musicbrainz.org/work/{{ $work->mbid }}" target="_blank">MBID</a></td>--}}
                         <td>{{ $work->listeners_week > 0 ? $work->listeners_week : '' }}</td>
