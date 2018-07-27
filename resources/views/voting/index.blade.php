@@ -6,7 +6,7 @@
         <div class="row mb-2">
 
             @foreach($votings as $voting)
-            <div class="col-md-6">
+            <div class="col-12">
                 <div class="card flex-md-row mb-4 box-shadow h-md-250">
                     <div class="card-body d-flex flex-column">
                         <strong class="d-inline-block mb-2 text-primary">{{ title_case($voting->type) }}</strong>
@@ -29,6 +29,9 @@
                                 <a href="{{ action('VotingController@show', [$voting->id]) }}" class="btn btn-outline-secondary btn-sm">Vote</a>
                                 @can('manage-voting-ballots')
                                     <a href="{{ action('Admin\VotingController@edit', [$voting->id]) }}" class="btn btn-outline-danger btn-sm">Administrate</a>
+                                @endcan
+                                @can('manage-voting-ballots')
+                                    <a href="{{ action('Admin\VotingController@showStats', [$voting->id]) }}" class="btn btn-outline-danger btn-sm">Statistics</a>
                                 @endcan
                             </div>
 

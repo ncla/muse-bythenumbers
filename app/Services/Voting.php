@@ -14,22 +14,41 @@ class Voting
 
     public static function getMatchUp($votingBallotID, $userID)
     {
-        // Query written so less voted matchups get priority
-        return Matchups::select('voting_matchups.*', 'votesOne.*', 'votesTwo.*', DB::raw('IFNULL(`votesTwo`.`count`, 0) AS `vote_count`'))
+        // To future developer when this might become too taxing, maybe switch to old method where votes were given
+        // based on least voted matchup, not least voted songs.
+        $songVoteCountsSubQuery = 'SELECT `song_votes`.`song_id`, COUNT(*) as song_vote_count
+                                    FROM
+                                        (SELECT `voting_matchups`.`songA_id` AS song_id
+                                        FROM `voting_matchups`
+                                        INNER JOIN `votes` ON `voting_matchups`.`id` = `votes`.`voting_matchup_id`
+                                        WHERE `voting_matchups`.`voting_ballot_id` = ' . intval($votingBallotID) . '
+                                        UNION ALL
+                                        SELECT `voting_matchups`.`songB_id` AS song_id
+                                        FROM `voting_matchups`
+                                        INNER JOIN `votes` ON `voting_matchups`.`id` = `votes`.`voting_matchup_id`
+                                        WHERE `voting_matchups`.`voting_ballot_id` = ' . intval($votingBallotID) . ')
+                                    song_votes
+                                    GROUP BY `song_id`';
+
+        // Query written so less voted songs get priority
+        return Matchups::select('voting_matchups.*', 'votesOne.*',
+            'song_votes1.song_vote_count as songA_vote_count', 'song_votes2.song_vote_count as songB_vote_count')
             // votesOne is for getting all submitted votes by user_id
             ->leftJoin(DB::raw('(SELECT `user_id`, `voting_matchup_id` FROM `votes` WHERE `user_id` = ' . $userID .') AS votesOne'),
                 function($join) {
                     $join->on('votesOne.voting_matchup_id', '=', 'voting_matchups.id');
                 })
-            // votesTwo is used to get COUNT for voting matchups for determining which matchup needs a vote (so all matchups are voted evenly)
-            ->leftJoin(DB::raw('(SELECT `voting_matchup_id`, COUNT(*) as `count` FROM `votes` GROUP BY `voting_matchup_id`) AS votesTwo'),
-                function($join) {
-                    $join->on('votesTwo.voting_matchup_id', '=', 'voting_matchups.id');
-                })
+            ->leftJoin(DB::raw('(' . $songVoteCountsSubQuery . ') as song_votes1'), function($join) {
+                $join->on('voting_matchups.songA_id', '=', 'song_votes1.song_id');
+            })
+            ->leftJoin(DB::raw('(' . $songVoteCountsSubQuery . ') as song_votes2'), function($join) {
+                $join->on('voting_matchups.songB_id', '=', 'song_votes2.song_id');
+            })
             ->where('voting_matchups.voting_ballot_id', $votingBallotID)
             ->where('votesOne.user_id', null)
             ->where('votesOne.voting_matchup_id', null)
-            ->orderBy('vote_count')
+            ->orderBy('songA_vote_count')
+            ->orderBy('songB_vote_count')
             ->inRandomOrder()
             ->limit(1)
             ->get()->first();
