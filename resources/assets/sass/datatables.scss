@@ -101,36 +101,40 @@ table.dataTable thead {
     cursor: pointer;
     position: relative;
 
-    //&:before,
-    //&:after {
-    //  position: absolute;
-    //  bottom: 0.9em;
-    //  display: block;
-    //  opacity: 0.3;
-    //}
-    //
-    //&:before {
-    //  right: 1em;
-    //  content: "\2191"; // up arrow - ascending
-    //}
-    //
-    //&:after {
-    //  right: 0.5em;
-    //  content: "\2193"; // down arrow - descending
-    //}
+    &:before,
+    &:after {
+      position: absolute;
+      bottom: 0;
+      right: 0.3em;
+      display: block;
+      opacity: 0;
+    }
+
+    &:before {
+      content: "\25B4"; // up arrow - ascending
+    }
+
+    &:after {
+      content: "\25BE"; // down arrow - descending
+    }
   }
 
-  //.sorting_asc:before,
-  //.sorting_desc:after {
-  //  opacity: 1;
-  //}
-  //
-  //.sorting_asc_disabled:before,
-  //.sorting_desc_disabled:after {
-  //  opacity: 0;
-  //}
+  .sorting_asc:before,
+  .sorting_desc:after {
+    opacity: 0.5;
+  }
+
+  .sorting_asc_disabled:before,
+  .sorting_desc_disabled:after {
+    opacity: 0;
+  }
 }
 
+table.dataTable.table-sm {
+  > thead > tr > th.sorting_asc, > thead > tr > th.sorting_desc {
+    padding-right: 10px;
+  }
+}
 
 // Scrolling
 div.dataTables_scrollHead table.dataTable {

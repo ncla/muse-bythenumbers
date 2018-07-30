@@ -24,8 +24,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('scrape:lastfm-playcount')
-                  ->dailyAt('00:05');
+        $schedule->command('scrape:lastfm-playcount')
+            ->dailyAt('00:05');
+
+        $schedule->command('scrape:spotifytop')
+            ->dailyAt('00:07');
+
+        $schedule->command('scrape:spotifytracks')
+            ->mondays()->at('00:02');
     }
 
     /**

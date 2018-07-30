@@ -75,3 +75,26 @@ table.table-xs {
     padding: 0.4rem 1.25rem;
   }
 }
+
+#mainStatisticsTable {
+
+  span.table-spotify-icon, span.table-lastfm-icon {
+    vertical-align: middle;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  span.table-spotify-icon {
+    background-image: url('/images/spotify_icon.png');
+    width: 15px;
+    height: 15px;
+  }
+
+  span.table-lastfm-icon {
+    background-image: url('/images/lastfm_icon.png');
+    width: 20px;
+    height: 11px;
+  }
+
+}

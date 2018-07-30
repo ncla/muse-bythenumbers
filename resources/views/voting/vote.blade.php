@@ -33,7 +33,7 @@
                 </span>
 
                 <div class="text-muted">
-                    <a href="{{ action('VotingController@mystats', ['id' => request()->route('id')]) }}">View your stats</a> | <a href="{{ action('VotingController@myhistory', ['id' => request()->route('id')]) }}">View voting history</a>
+                    <a href="{{ action('VotingController@mystats', ['id' => request()->route('id')]) }}">View My Stats</a> | <a href="{{ action('VotingController@myhistory', ['id' => request()->route('id')]) }}">View My Voting History</a>
                 </div>
 
                 <hr/>

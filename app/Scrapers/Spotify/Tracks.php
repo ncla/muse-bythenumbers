@@ -4,18 +4,7 @@ namespace App\Scrapers\Spotify;
 
 use App\Models\Spotify\Album;
 use App\Models\Spotify\Track;
-use App\Setlist;
-use GuzzleHttp;
-use GuzzleHttp\Promise\EachPromise;
-use GuzzleHttp\Pool;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use ErrorException;
-use Illuminate\Support\Carbon;
-use Psr\Http\Message\ResponseInterface;
 use SpotifyWebAPI\Session;
 use SpotifyWebAPI\SpotifyWebAPI;
 
