@@ -43,7 +43,21 @@
 
                 <p><strong>Where is X song?</strong></p>
 
-                <p>General rank voting-ballots may exclude some song tracks to reduce the match-up count. These would be live tracks, live (non-studio) covers, variations of same song, demos, short tracks that are intros/interludes etc., or stuff you can't find officially.</p>
+                <p>General rank voting-ballots may exclude some song tracks to reduce the match-up count. It's kind of difficult but here are rough rules for what gets included in main voting ballot rankings:</p>
+
+                <ul>
+                    <li>Studio album songs</li>
+                    <li>Recorded and released tracks officially by the artist (must be purchasable or streamed legally)</li>
+                </ul>
+
+                <p>Here's what doesn't make to the voting.</p>
+
+                <ul>
+                    <li>Remixes</li>
+                    <li>Alternate versions</li>
+                    <li>Tracks that are live versions, no studio available</li>
+                    <li>Instrumental versions of songs</li>
+                </ul>
 
                 <p><strong>Why can't I see the statistics for the voting ballot now?</strong></p>
 

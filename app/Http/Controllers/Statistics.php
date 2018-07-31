@@ -26,7 +26,11 @@ class Statistics extends Controller
 
         $works = DB::table('musicbrainz_songs')
             ->select([DB::raw('COALESCE(musicbrainz_songs.name_override, musicbrainz_songs.name) as name_final'), 'musicbrainz_songs.mbid',
-                'musicbrainz_songs.name_override', 'musicbrainz_songs.id', 'performances.*', 'lastfm_tracks.listeners_week', 'spotify_top_tracks.chart_index'])
+                'musicbrainz_songs.name_override', 'musicbrainz_songs.id', 'lastfm_tracks.listeners_week', 'spotify_top_tracks.chart_index',
+                'performances.last_played', DB::raw('CAST(IFNULL(performances.playcount, 0) AS UNSIGNED) AS playcount')])
+            ->addSelect($years->map(function ($year) {
+                return DB::raw('CAST(COALESCE(total_' . $year->year . ', 0) AS UNSIGNED) AS total_' . $year->year);
+            })->toArray())
             ->leftJoin(DB::raw('
                 (SELECT `lastfm_tracks`.`track_name`, `lastfm_tracks`.`listeners_week`, `lastfm_tracks`.`created_at`
                 FROM `lastfm_tracks`
@@ -63,11 +67,17 @@ class Statistics extends Controller
             ->orderBy('musicbrainz_songs.name')
             ->get();
 
-        //dump($works);
+        $totalGigsPerYear = DB::table('setlists')
+            ->select(DB::raw('DATE_FORMAT(`setlists`.`date`, "%Y") as `year`'), DB::raw('COUNT(*) as total_gigs'))
+            ->groupBy(['year'])
+            ->get();
+
+        $totalGigsPerYear = $totalGigsPerYear->keyBy('year');
 
         return view('statistics', [
             'works' => $works,
-            'years_columns' => $years
+            'years_columns' => $years,
+            'years_total_gigs' => $totalGigsPerYear
         ]);
     }
 

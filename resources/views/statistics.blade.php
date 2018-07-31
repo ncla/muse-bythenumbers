@@ -64,12 +64,11 @@
 
     <div class="container-fluid mt-3 pb-3">
         <div class="table-responsive">
-            <table class="table table-bordered table-sm table-hover table-xs dt-responsive" id="mainStatisticsTable">
+            <table class="table table-bordered table-sm table-hover table-xs dt-responsive table-striped" id="mainStatisticsTable">
                 <thead class="thead-light">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Track Name</th>
-                    {{--<th scope="col">MBID</th>--}}
                     <th scope="col"><span class="table-lastfm-icon"></span> Listeners</th>
                     <th scope="col"><span class="table-spotify-icon"></span> Top10</th>
                     <th scope="col">Last played</th>
@@ -84,13 +83,20 @@
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
                         <td><a href="/songs/{{ $work->id }}">{{ $work->name_final }}</a></td>
-                        {{--<td><a href="https://musicbrainz.org/work/{{ $work->mbid }}" target="_blank">MBID</a></td>--}}
                         <td>{{ $work->listeners_week > 0 ? $work->listeners_week : '' }}</td>
                         <td>{{ $work->chart_index }}</td>
                         <td>{{ $work->last_played }}</td>
                         <td>{{ $work->playcount }}</td>
                         @foreach($years_columns as $year)
-                            <td scope="col">{{ $work->{'total_' . $year->year} != 0 ? $work->{'total_' . $year->year} : '' }}</td>
+                            @php
+                                $totalPerf = $work->{'total_' . $year->year};
+                                $totalGigs = $years_total_gigs[$year->year]->total_gigs;
+                                $percentageOfGigs = (($totalGigs === 0 || $totalPerf === 0) ? 0 : ($totalPerf / $totalGigs) * 100);
+                            @endphp
+                            <td scope="col" data-toggle="tooltip" data-html="true"
+                                title="{{ $totalPerf }}/{{ $totalGigs }} ({{ round($percentageOfGigs, 2) }}%)">
+                                {{ $totalPerf != 0 ? $work->{'total_' . $year->year} : '' }}
+                            </td>
                         @endforeach
                     </tr>
                 @endforeach
@@ -100,4 +106,9 @@
         </div>
     </div>
 
+    @push('scripts')
+        <script>
+            $('body').tooltip({selector: '[data-toggle="tooltip"]'});
+        </script>
+    @endpush
 @endsection
