@@ -23,6 +23,9 @@
                             title: {
                                 text: 'Last.FM Chart Index'
                             },
+                            subtitle: {
+                                text: 'Lower value is better'
+                            },
                             xAxis: {
                                 type: 'datetime',
                                 dateTimeLabelFormats: { // don't display the dummy year
@@ -35,14 +38,15 @@
                             },
                             yAxis: {
                                 title: {
-                                    text: 'Listeners (7 days)'
+                                    text: 'Chart index (7 days)'
                                 },
                                 min: 0,
+                                max: 50,
                                 reversed: true
                             },
                             tooltip: {
                                 headerFormat: '<b>{series.name}</b><br>',
-                                pointFormat: '{point.x:%e. %b}: {point.y:.2f}'
+                                pointFormat: '{point.x:%Y-%m-%d}: <b>{point.y}</b>'
                             },
 
                             plotOptions: {
@@ -50,14 +54,18 @@
                                     marker: {
                                         enabled: true
                                     }
+                                },
+                                series: {
+                                    lineWidth: 1,
+                                    animation: false,
+                                    marker: {
+                                        enabled: true,
+                                        radius: 2
+                                    }
                                 }
                             },
 
-                            colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
-
-                            // Define the data points. All series have a dummy year
-                            // of 1970/71 in order to be compared on the same x axis. Note
-                            // that in JavaScript, months start at 0 for January, 1 for February etc.
+                            zoomType: 'Y',
                             series: {!! $chart !!}
                         });
                     </script>
