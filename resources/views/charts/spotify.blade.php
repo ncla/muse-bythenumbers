@@ -4,12 +4,12 @@
     <div class="container-fluid mt-3 pb-5">
         <div class="row">
             <div class="col-12">
-                <h1>LastFM Chart History</h1>
+                <h1>Spotify Chart History</h1>
             </div>
 
             <div class="col-12">
 
-                <div id="container" style="min-width: 310px; height: 1400px; margin: 0 auto"></div>
+                <div id="container" style="min-width: 310px; height: 700px; margin: 0 auto"></div>
 
                 @push('scripts')
                     <script src="//code.highcharts.com/highcharts.js"></script>
@@ -21,7 +21,7 @@
                                 type: 'spline'
                             },
                             title: {
-                                text: 'Last.FM Chart Index'
+                                text: 'Spotify TOP10 Chart Index'
                             },
                             subtitle: {
                                 text: 'Lower value is better'
@@ -38,10 +38,10 @@
                             },
                             yAxis: {
                                 title: {
-                                    text: 'Chart index (7 days)'
+                                    text: 'Chart index'
                                 },
                                 min: 0,
-                                max: 50,
+                                max: 15,
                                 reversed: true
                             },
                             tooltip: {

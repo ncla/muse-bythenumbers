@@ -34,6 +34,17 @@
                     <a class="dropdown-item" href="{{ action('SetlistController@index') }}">Setlists</a>
                 </div>
             </li>
+
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle nav-link mr-0" href="#" id="navbarDropdownChartHistory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Chart History
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownChartHistory">
+                    <a class="dropdown-item" href="{{ action('ChartHistoryController@showLastFm') }}">LastFM</a>
+                    <a class="dropdown-item" href="{{ action('ChartHistoryController@showSpotifyTop10') }}">Spotify</a>
+                </div>
+            </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="/about">About</a>
             </li>
