@@ -7,14 +7,80 @@
                 <h1>{{ $song->name }}</h1>
                 <strong>Total performance count per year</strong>
             </div>
-            <div style="height: 250px" class="col-12">
-                <canvas id="performanceCountChart" height="200px"></canvas>
-            </div>
+
+            @if(count($statsSetlistAppearance['years']) > 1)
+                <div style="height: 250px" class="col-12">
+                    <canvas id="performanceCountChart" height="200px"></canvas>
+                </div>
+
+                @push('scripts')
+                    <script>
+                        var performanceCountChart = new Chart(document.getElementById("performanceCountChart").getContext('2d'), {
+                            type: 'bar',
+                            data: {
+                                labels: {{ json_encode($statsSetlistAppearance['years']) }},
+                                datasets: [
+                                    {
+                                        label: '# of performances',
+                                        data: {{ json_encode($statsSetlistAppearance['plays']) }},
+                                        backgroundColor: 'rgb(95, 167, 206)',
+                                        borderWidth: 0
+                                    },
+                                    {
+                                        label: '# of total gigs',
+                                        data: {{ json_encode($statsSetlistAppearance['totalgigs']) }},
+                                        backgroundColor: 'rgb(164, 201, 221)',
+                                        borderWidth: 0
+                                    }
+                                ]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true,
+                                        }
+                                    }],
+                                    xAxes: [{
+                                        stacked: true,
+                                        maxBarThickness: 100,
+                                        padding: {
+                                            top: 50,
+                                        },
+                                    }]
+                                },
+                                tooltips: {
+                                    yAlign: 'bottom'
+                                },
+                                layout: {
+                                    padding: {
+                                        top: 10,
+                                    }
+                                },
+                                responsive: true,
+                                maintainAspectRatio: false,
+                            }
+                        });
+                    </script>
+                @endpush
+
+            @else
+                <div class="col-12">
+                    <div class="bg-white text-center p-3 my-2 border">
+                        No data.
+                    </div>
+                </div>
+            @endif
+
         </div>
 
         <div class="row">
             <div class="col-12 my-2">
-                <strong>Preceding and following entries in set-list <button class="btn btn-sm btn-outline-secondary" id="toggle_lookaround">Toggle all entries</button></strong>
+                <strong>Preceding and following entries in set-list
+                    @if(count($setlistPrevNextTrack['prev']) > 0 || count($setlistPrevNextTrack['next']) > 0)
+                    <button class="btn btn-sm btn-outline-secondary" id="toggle_lookaround">Toggle all entries</button>
+                    @endif
+                </strong>
             </div>
 
             @push('scripts')
@@ -27,40 +93,52 @@
             @endpush
 
             <div class="col-12 col-md-6">
-                <table class="table table-bordered table-sm table-xs table-hover table-lookaround-setlist-entries-only-five" id="preceding_setlist_table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Count</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($setlistPrevNextTrack['prev'] as $songName => $entries)
-                            <tr @if(($loop->index + 1) > 5) class="more-than-five" @endif>
-                                <td @if($songName === '') class="font-italic" @endif>{{ $songName === '' ? 'None' : $songName }}</td>
-                                <td>{{ count($setlistPrevNextTrack['prev'][$songName]) }}</td>
+                @if(count($setlistPrevNextTrack['prev']) > 0)
+                    <table class="table table-bordered table-sm table-xs table-hover table-lookaround-setlist-entries-only-five" id="preceding_setlist_table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Count</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach($setlistPrevNextTrack['prev'] as $songName => $entries)
+                                <tr @if(($loop->index + 1) > 5) class="more-than-five" @endif>
+                                    <td @if($songName === '') class="font-italic" @endif>{{ $songName === '' ? 'None' : $songName }}</td>
+                                    <td>{{ count($setlistPrevNextTrack['prev'][$songName]) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="bg-white text-center p-2 my-1 border">
+                        No data.
+                    </div>
+                @endif
             </div>
             <div class="col-12 col-md-6">
-                <table class="table table-bordered table-sm table-xs table-hover table-lookaround-setlist-entries-only-five" id="following_setlist_table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Count</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($setlistPrevNextTrack['next'] as $songName => $entries)
-                        <tr @if(($loop->index + 1) > 5) class="more-than-five" @endif>
-                            <td @if($songName === '') class="font-italic" @endif>{{ $songName === '' ? 'None' : $songName }}</td>
-                            <td>{{ count($setlistPrevNextTrack['next'][$songName]) }}</td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+                @if(count($setlistPrevNextTrack['next']) > 0)
+                    <table class="table table-bordered table-sm table-xs table-hover table-lookaround-setlist-entries-only-five" id="following_setlist_table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($setlistPrevNextTrack['next'] as $songName => $entries)
+                            <tr @if(($loop->index + 1) > 5) class="more-than-five" @endif>
+                                <td @if($songName === '') class="font-italic" @endif>{{ $songName === '' ? 'None' : $songName }}</td>
+                                <td>{{ count($setlistPrevNextTrack['next'][$songName]) }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="bg-white text-center p-2 my-1 border">
+                        No data.
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -75,53 +153,6 @@
 
         @push('scripts')
             <script>
-                var performanceCountChart = new Chart(document.getElementById("performanceCountChart").getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: {{ json_encode($statsSetlistAppearance['years']) }},
-                        datasets: [
-                            {
-                                label: '# of performances',
-                                data: {{ json_encode($statsSetlistAppearance['plays']) }},
-                                backgroundColor: 'rgb(95, 167, 206)',
-                                borderWidth: 0
-                            },
-                            {
-                                label: '# of total gigs',
-                                data: {{ json_encode($statsSetlistAppearance['totalgigs']) }},
-                                backgroundColor: 'rgb(164, 201, 221)',
-                                borderWidth: 0
-                            }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true,
-                                }
-                            }],
-                            xAxes: [{
-                                stacked: true,
-                                maxBarThickness: 100,
-                                padding: {
-                                    top: 50,
-                                },
-                            }]
-                        },
-                        tooltips: {
-                            yAlign: 'bottom'
-                        },
-                        layout: {
-                            padding: {
-                                top: 10,
-                            }
-                        },
-                        responsive: true,
-                        maintainAspectRatio: false,
-                    }
-                });
-
                 var lastFmChart = new Chart(document.getElementById("lastfmListeners").getContext('2d'), {
                     type: 'line',
                     data: {

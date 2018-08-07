@@ -30,6 +30,8 @@ Route::get('/voting-ballots/{id}/my/history', 'VotingController@myhistory')->mid
 
 Route::get('songs/{id}', 'SongsController@show');
 
+Route::get('charthistory/lastfm', 'ChartHistoryController@showLastFm');
+
 Route::get('about', function() {
     return view('about');
 });
