@@ -29,11 +29,26 @@ class SetlistController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $this->setlistRepository->pushCriteria(new RequestCriteria($request));
+        $this->setlistRepository->with('songs')->pushCriteria(new RequestCriteria($request));
         $setlists = $this->setlistRepository->orderBy('date', 'desc')->paginate(10);
 
+        $searchQuery = $request->get('search');
+
+        $searchQueryWithKeys = [];
+
+        if ($searchQuery) {
+            $searchQueryArr = explode(';', $searchQuery);
+            $searchQueryWithKeys = [];
+
+            foreach ($searchQueryArr as $query) {
+                $explode = explode(':', $query);
+                $searchQueryWithKeys[$explode[0]] = $explode[1];
+            }
+        }
+
         return view('setlists.index')
-            ->with('setlists', $setlists);
+            ->with('setlists', $setlists)
+            ->with('searchValues', $searchQueryWithKeys);
     }
 
     /**

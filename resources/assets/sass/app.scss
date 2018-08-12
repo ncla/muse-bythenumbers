@@ -57,9 +57,18 @@ table.table-xs {
   }
 }
 
+.page-setlist-index .setlist-tracks {
+  font-size: 0.8em;
+}
+
+.page-setlist-index .card-title {
+  margin-bottom: 0.4rem;
+}
+
 .setlist-page-header {
   height: 200px;
 
+  background-color: #17263c;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;

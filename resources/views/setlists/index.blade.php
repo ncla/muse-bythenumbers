@@ -1,18 +1,64 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mt-3">
+    <div class="container mt-3 page-setlist-index">
 
         <div class="row">
             <div class="col-12">
                 <h1 class="pull-left">Setlists</h1>
             </div>
         </div>
-        {{--<a class="btn btn-primary pull-right" style="margin-top: 25px" href="{!! route('setlists.create') !!}">Add New</a>--}}
 
         <div class="clearfix"></div>
 
         @include('flash::message')
+
+        <div class="search">
+            {!! Form::open(['method' => 'GET', 'route' => 'setlists.index', 'role' => 'search', 'id' => 'setlist_search'])  !!}
+                <div class="row">
+                    <div class="col-12">
+                        <h4>Search</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-12 mb-1 mb-md-0">
+                        {!! Form::text('venue', $searchValues['venue'] ?? null, ['class' => 'form-control', 'placeholder' => 'Venue']) !!}
+                    </div>
+                    <div class="col-md-4 col-12 mb-1 mb-md-0">
+                        {!! Form::text('songs.name', $searchValues['songs.name'] ?? null, ['class' => 'form-control', 'placeholder' => 'Track name']) !!}
+                    </div>
+                    <div class="col-md-4 col-12 mb-1 mb-md-0">
+                        {!! Form::text('songs.note', $searchValues['songs.note'] ?? null, ['class' => 'form-control', 'placeholder' => 'Track note']) !!}
+                    </div>
+                </div>
+
+                {!! Form::submit('Search', ['class' => 'btn btn-primary btn-sm mt-2 mb-2']); !!}
+
+            {!! Form::close() !!}
+        </div>
+
+        @push('scripts')
+            <script>
+                $(function() {
+                    $('#setlist_search').on('submit', function(e) {
+                        e.preventDefault();
+
+                        const form = document.querySelector('#setlist_search');
+                        const data = new FormData(form);
+
+                        let searchQuery = [];
+
+                        Array.from(data).forEach(function(el) {
+                            if(el[1].length > 0) {
+                                searchQuery.push(el[0] + ':' + el[1]);
+                            }
+                        });
+
+                        window.location.href = this.action + '?search=' + encodeURI(searchQuery.join(';')) + '&searchJoin=and';
+                    });
+                });
+            </script>
+        @endpush
 
         <div class="clearfix"></div>
 
@@ -28,7 +74,12 @@
                                         {{ $setlist->venue['name'] }}, {{ $setlist->venue['city']['name'] }}, {{ $setlist->venue['city']['country']['name'] }}
                                     </a>
                                 </h5>
-                                <p class="card-text">{{ \Carbon\Carbon::parse($setlist->date)->toFormattedDateString() }}</p>
+                                <div class="card-text">{{ \Carbon\Carbon::parse($setlist->date)->toFormattedDateString() }}</div>
+                                <div class="card-text setlist-tracks mb-1">
+                                    @foreach($setlist->songs as $song)
+                                        <span class="pr-1 font-weight-light">{{ $song->name }}</span>
+                                    @endforeach
+                                </div>
                                 <a href="/setlists/{!! $setlist->id !!}" class="btn btn-primary btn-sm">View</a>
                             </div>
                         </div>
