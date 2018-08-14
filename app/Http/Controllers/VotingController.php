@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateVote;
 use App\Services\Songs as SongsService;
+use Artesaos\SEOTools\Traits\SEOTools;
 use Illuminate\Http\Request;
 use App\Models\Voting;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,8 @@ use Flash;
 
 class VotingController extends Controller
 {
+    use SEOTools;
+
     public function __construct()
     {
         $this->votingService = new VotingService();
@@ -26,18 +29,23 @@ class VotingController extends Controller
     {
         $votings = Voting::with('songs')->get();
 
-        //dump($votings);
+        $this->seo()->setTitle('Voting Ballots');
 
         return view('voting.index')
-            ->with('votings', $votings);
+            ->with('votings', $votings)
+            ->with('title', 'Voting Ballots');
     }
 
     public function show($id)
     {
         $ballot = Voting::findOrFail($id);
 
+        $this->seo()->setTitle($ballot->name);
+        $this->seo()->setDescription('Voting on ' . $ballot->name);
+
         return view('voting.vote')
-            ->with('ballot', $ballot);
+            ->with('ballot', $ballot)
+            ->with('title', $ballot->name);
     }
 
     public function vote($id, CreateVote $request)
@@ -109,9 +117,13 @@ class VotingController extends Controller
 
         $stats = VotingService::calculateStatsFromVotes($id, Auth::id());
 
+        $this->seo()->setTitle('My Statistics - ' . $ballot->name);
+        $this->seo()->setDescription('Your statistics based on the votes you have submitted');
+
         return view('voting.mystats')
             ->with('ballot', $ballot)
-            ->with('stats', $stats);
+            ->with('stats', $stats)
+            ->with('title', 'My Statistics - ' . $ballot->name);
     }
 
     public function myhistory($id, Request $request)
@@ -128,8 +140,12 @@ class VotingController extends Controller
 
         $history = VotingService::getVotingHistory($id, Auth::id());
 
+        $this->seo()->setTitle('My Voting History - ' . $ballot->name);
+        $this->seo()->setDescription('Your voting history on ' . $ballot->name);
+
         return view('voting.myhistory')
             ->with('ballot', $ballot)
-            ->with('history', $history);
+            ->with('history', $history)
+            ->with('title', 'My Voting History - ' . $ballot->name);
     }
 }

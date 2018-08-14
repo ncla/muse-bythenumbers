@@ -6,6 +6,7 @@ use App\Http\Requests\CreateSetlistRequest;
 use App\Http\Requests\UpdateSetlistRequest;
 use App\Repositories\SetlistRepository;
 use App\Http\Controllers\AppBaseController;
+use Artesaos\SEOTools\Traits\SEOTools;
 use Illuminate\Http\Request;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -13,6 +14,8 @@ use Response;
 
 class SetlistController extends AppBaseController
 {
+    use SEOTools;
+
     /** @var  SetlistRepository */
     private $setlistRepository;
 
@@ -46,9 +49,13 @@ class SetlistController extends AppBaseController
             }
         }
 
+        $this->seo()->setTitle('Setlists');
+        $this->seo()->setDescription('All setlists');
+
         return view('setlists.index')
             ->with('setlists', $setlists)
-            ->with('searchValues', $searchQueryWithKeys);
+            ->with('searchValues', $searchQueryWithKeys)
+            ->with('title', 'Setlists');
     }
 
     /**
@@ -90,15 +97,18 @@ class SetlistController extends AppBaseController
     {
         $setlist = $this->setlistRepository->findWithoutFail($id);
 
-        //dump($setlist, $setlist->songs()->get()->toArray());
-
         if (empty($setlist)) {
             Flash::error('Setlist not found');
 
             return redirect(route('setlists.index'));
         }
 
-        return view('setlists.show')->with('setlist', $setlist);
+        $this->seo()->setTitle($setlist->venueFullName . ' - Setlist');
+        $this->seo()->setDescription('Setlist for ' . $setlist->venueFullName);
+
+        return view('setlists.show')
+            ->with('setlist', $setlist)
+            ->with('title', $setlist->venueFullName . ' - Setlist');
     }
 
     /**

@@ -33,9 +33,7 @@ Route::get('songs/{id}/{songname?}', 'SongsController@show');
 Route::get('chart-history/lastfm', 'ChartHistoryController@showLastFm');
 Route::get('chart-history/spotify', 'ChartHistoryController@showSpotifyTop10');
 
-Route::get('about', function() {
-    return view('about');
-});
+Route::view('about', 'about', ['title' => 'About']);
 
 Route::group(['middleware' => 'can:manage-voting-ballots'], function() {
     Route::resource('admin/votings', 'Admin\VotingController');

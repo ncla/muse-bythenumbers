@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Artesaos\SEOTools\Traits\SEOTools;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class ChartHistoryController extends Controller
 {
+    use SEOTools;
+
     public function showLastFm()
     {
         $history = DB::table('lastfm_tracks')
@@ -31,8 +34,11 @@ class ChartHistoryController extends Controller
             ];
         })->values();
 
+        $this->seo()->setTitle('LastFM 7 Day Chart Index History');
+
         return view('charts.lastfm')
-            ->with('chart', $history);
+            ->with('chart', $history)
+            ->with('title', 'LastFM 7 Day Chart Index History');
     }
 
     public function showSpotifyTop10()
@@ -59,7 +65,10 @@ class ChartHistoryController extends Controller
             ];
         })->values();
 
+        $this->seo()->setTitle('Spotify TOP10 Chart Index History');
+
         return view('charts.spotify')
-            ->with('chart', $history);
+            ->with('chart', $history)
+            ->with('title', 'Spotify TOP10 Chart Index History');
     }
 }

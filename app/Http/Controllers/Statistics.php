@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Setlist;
+use Artesaos\SEOTools\Traits\SEOTools;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class Statistics extends Controller
 {
+    use SEOTools;
+
     public function show()
     {
         $years = DB::select('SELECT `a`.`year` FROM (
@@ -74,10 +77,14 @@ class Statistics extends Controller
 
         $totalGigsPerYear = $totalGigsPerYear->keyBy('year');
 
+        $this->seo()->setTitle('Statistics');
+        $this->seo()->setDescription('Comprehensive statistics table about the artist');
+
         return view('statistics', [
             'works' => $works,
             'years_columns' => $years,
-            'years_total_gigs' => $totalGigsPerYear
+            'years_total_gigs' => $totalGigsPerYear,
+            'title' => 'Statistics'
         ]);
     }
 
@@ -89,7 +96,6 @@ class Statistics extends Controller
         $works = DB::table('musicbrainz_songs')
             ->select(['musicbrainz_songs.*', 'setlist_songs.name as setlist_name'])
             ->leftJoin('setlist_songs', 'musicbrainz_songs.name', 'setlist_songs.name')
-//            ->join('setlists', 'setlist_songs.id', 'setlists.id')
             ->groupBy('musicbrainz_songs.name')
             ->orderBy('musicbrainz_songs.name')
             ->get();
@@ -97,7 +103,6 @@ class Statistics extends Controller
         $works2 = DB::table('musicbrainz_songs')
             ->select(['musicbrainz_songs.*', 'setlist_songs.name as setlist_name'])
             ->leftJoin('setlist_songs', 'musicbrainz_songs.name', 'setlist_songs.name')
-//            ->join('setlists', 'setlist_songs.id', 'setlists.id')
             ->groupBy('musicbrainz_songs.name')
             ->orderBy('musicbrainz_songs.name')
             ->where('setlist_songs.name', '=', null)
@@ -110,9 +115,6 @@ class Statistics extends Controller
             ->orderBy('setlist_songs.name')
             ->where('musicbrainz_songs.name', '=', null)
             ->get();
-
-
-        //dump($works3);
 
         return view('debug', [
             'debug1' => $works,

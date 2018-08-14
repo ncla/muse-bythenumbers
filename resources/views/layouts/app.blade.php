@@ -1,21 +1,25 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 
-    <title>Muse Deepcuts Live</title>
+    {!! SEO::generate() !!}
+
+    @php
+        $titleHtml = $title ?? null;
+
+    @endphp
+    <title>{{ isset($title) ? $title . ' · ' : '' }}DEEPCUTS Live</title>
 </head>
 <body>
 
 <wrapper class="d-flex flex-column">
 
 <nav class="navbar navbar-expand-md border-bottom box-shadow navbar-light bg-white">
-    <a class="navbar-brand" href="/">Deepcuts.Live</a>
+    <a class="navbar-brand" href="/">DEEPCUTS Live</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>

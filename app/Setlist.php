@@ -48,4 +48,9 @@ class Setlist extends Model
     {
         return $this->hasMany('App\SetlistSong', 'id', 'id');
     }
+
+    public function getVenueFullNameAttribute()
+    {
+        return $this->venue['name'] . ', ' . $this->venue['city']['name'] . ', ' . $this->venue['city']['country']['name'];
+    }
 }
