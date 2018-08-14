@@ -32,8 +32,7 @@ class VotingController extends Controller
         $this->seo()->setTitle('Voting Ballots');
 
         return view('voting.index')
-            ->with('votings', $votings)
-            ->with('title', 'Voting Ballots');
+            ->with('votings', $votings);
     }
 
     public function show($id)
@@ -122,8 +121,7 @@ class VotingController extends Controller
 
         return view('voting.mystats')
             ->with('ballot', $ballot)
-            ->with('stats', $stats)
-            ->with('title', 'My Statistics - ' . $ballot->name);
+            ->with('stats', $stats);
     }
 
     public function myhistory($id, Request $request)
@@ -145,7 +143,6 @@ class VotingController extends Controller
 
         return view('voting.myhistory')
             ->with('ballot', $ballot)
-            ->with('history', $history)
-            ->with('title', 'My Voting History - ' . $ballot->name);
+            ->with('history', $history);
     }
 }

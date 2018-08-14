@@ -54,8 +54,7 @@ class SetlistController extends AppBaseController
 
         return view('setlists.index')
             ->with('setlists', $setlists)
-            ->with('searchValues', $searchQueryWithKeys)
-            ->with('title', 'Setlists');
+            ->with('searchValues', $searchQueryWithKeys);
     }
 
     /**
@@ -107,8 +106,7 @@ class SetlistController extends AppBaseController
         $this->seo()->setDescription('Setlist for ' . $setlist->venueFullName);
 
         return view('setlists.show')
-            ->with('setlist', $setlist)
-            ->with('title', $setlist->venueFullName . ' - Setlist');
+            ->with('setlist', $setlist);
     }
 
     /**

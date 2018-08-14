@@ -7,12 +7,6 @@
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 
     {!! SEO::generate() !!}
-
-    @php
-        $titleHtml = $title ?? null;
-
-    @endphp
-    <title>{{ isset($title) ? $title . ' · ' : '' }}DEEPCUTS Live</title>
 </head>
 <body>
 

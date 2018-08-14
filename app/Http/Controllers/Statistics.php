@@ -84,7 +84,6 @@ class Statistics extends Controller
             'works' => $works,
             'years_columns' => $years,
             'years_total_gigs' => $totalGigsPerYear,
-            'title' => 'Statistics'
         ]);
     }
 

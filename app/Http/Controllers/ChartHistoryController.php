@@ -37,8 +37,7 @@ class ChartHistoryController extends Controller
         $this->seo()->setTitle('LastFM 7 Day Chart Index History');
 
         return view('charts.lastfm')
-            ->with('chart', $history)
-            ->with('title', 'LastFM 7 Day Chart Index History');
+            ->with('chart', $history);
     }
 
     public function showSpotifyTop10()
@@ -68,7 +67,6 @@ class ChartHistoryController extends Controller
         $this->seo()->setTitle('Spotify TOP10 Chart Index History');
 
         return view('charts.spotify')
-            ->with('chart', $history)
-            ->with('title', 'Spotify TOP10 Chart Index History');
+            ->with('chart', $history);
     }
 }
