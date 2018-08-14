@@ -8,7 +8,7 @@
                 <strong>Total performance count per year</strong>
             </div>
 
-            @if(count($statsSetlistAppearance['years']) > 1)
+            @if(count($statsSetlistAppearance['years']) > 0)
                 <div style="height: 250px" class="col-12">
                     <canvas id="performanceCountChart" height="200px"></canvas>
                 </div>

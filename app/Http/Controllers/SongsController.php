@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Setlist;
 use App\SetlistSong;
 use App\Songs;
+use Artesaos\SEOTools\Traits\SEOTools;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SongsController extends Controller
 {
+    use SEOTools;
+
     public function show($id)
     {
         $song = Songs::findOrFail($id);
@@ -77,6 +80,8 @@ class SongsController extends Controller
         // lastfm chart position
 
         // elo winrate, place, elo rank
+
+        $this->seo()->setTitle($song->name);
 
         return view('songs.show')
             ->with('song', $song)
