@@ -8,14 +8,14 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 
-    <title>By The Numbers – Muse</title>
+    <title>Muse Deepcuts Live</title>
 </head>
 <body>
 
 <wrapper class="d-flex flex-column">
 
 <nav class="navbar navbar-expand-md border-bottom box-shadow navbar-light bg-white">
-    <a class="navbar-brand" href="/">By The Numbers</a>
+    <a class="navbar-brand" href="/">Deepcuts.Live</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>

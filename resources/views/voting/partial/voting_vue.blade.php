@@ -127,6 +127,8 @@
             e.preventDefault();
         });
 
+        var responseReceivedTime = null;
+
         new Vue({
             el: '#voting',
             data: {
@@ -139,14 +141,18 @@
                 iframesLoading: {
                     0: true,
                     1: true
-                },
-                completed: false
+                }
             },
             mounted () {
                 this.sendVote(null);
             },
             methods: {
                 sendVote(votedOn) {
+                    // No fucking way you can determine which song is best under 750ms
+                    if (responseReceivedTime !== null && (+new Date() - responseReceivedTime) < 750) {
+                        return;
+                    }
+
                     this.loading = true;
                     this.iframesLoading[0] = this.iframesLoading[1] = true;
 
@@ -161,8 +167,6 @@
                         };
                     }
 
-                    this.voteData = null;
-
                     return axios.post('/voting-ballots/{{$ballot->id}}/vote', postData).then(response => {
                         this.voteData = response.data;
                         this.loading = false;
@@ -172,6 +176,8 @@
                         }
 
                         this.votingProgress = response.data.user_voting_progress;
+
+                        responseReceivedTime = +new Date();
                     })
                         .catch(error => {
                             console.log(error, error.response.data);
