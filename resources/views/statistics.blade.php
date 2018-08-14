@@ -69,12 +69,12 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Track Name</th>
-                    <th scope="col"><span class="table-lastfm-icon"></span> Listeners</th>
-                    <th scope="col"><span class="table-spotify-icon"></span> Top10</th>
-                    <th scope="col">Last played</th>
-                    <th scope="col">Total Live</th>
+                    <th scope="col" data-toggle="tooltip" title="LastFM Last 7 Days Listeners"><span class="table-lastfm-icon"></span> Listeners</th>
+                    <th scope="col" data-toggle="tooltip" title="Spotify TOP10 Chart Index"><span class="table-spotify-icon"></span> Top10</th>
+                    <th scope="col" data-toggle="tooltip" title="Based on SetlistFM data">Last played</th>
+                    <th scope="col" data-toggle="tooltip" title="Based on SetlistFM data">Total Live</th>
                     @foreach($years_columns as $year)
-                        <th scope="col">{{ $year->year }}</th>
+                        <th scope="col" data-toggle="tooltip" title="Based on SetlistFM data">{{ $year->year }}</th>
                     @endforeach
                 </tr>
                 </thead>
@@ -82,7 +82,7 @@
                 @foreach($works as $work)
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
-                        <td><a href="/songs/{{ $work->id }}">{{ $work->name_final }}</a></td>
+                        <td><a href="/songs/{{ $work->id }}/{{ rawurlencode($work->name_final) }}">{{ $work->name_final }}</a></td>
                         <td>{{ $work->listeners_week > 0 ? $work->listeners_week : '' }}</td>
                         <td>{{ $work->chart_index }}</td>
                         <td>{{ $work->last_played }}</td>

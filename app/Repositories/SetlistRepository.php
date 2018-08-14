@@ -22,7 +22,7 @@ class SetlistRepository extends BaseRepository
     protected $fieldSearchable = [
         'date',
         'venue' => 'LIKE',
-        'songs.name' => 'LIKE',
+        'songs.name' => '=',
         'songs.note' => 'LIKE'
     ];
 

@@ -21,77 +21,78 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Statistics</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="dropdown-toggle nav-link mr-0" href="#" id="navbarDropdownBrowse" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Browse
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownBrowse">
-                    <a class="dropdown-item" href="{{ action('VotingController@index') }}">Votings</a>
-                    <a class="dropdown-item" href="{{ action('SetlistController@index') }}">Setlists</a>
-                </div>
-            </li>
 
-            <li class="nav-item dropdown">
-                <a class="dropdown-toggle nav-link mr-0" href="#" id="navbarDropdownChartHistory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Chart History
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownChartHistory">
-                    <a class="dropdown-item" href="{{ action('ChartHistoryController@showLastFm') }}">LastFM</a>
-                    <a class="dropdown-item" href="{{ action('ChartHistoryController@showSpotifyTop10') }}">Spotify</a>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
-            </li>
-            {{--<li class="nav-item">--}}
-                {{--<a class="nav-link" href="/debug">Debug</a>--}}
-            {{--</li>--}}
-        </ul>
-
-        @if(Auth::check())
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav mr-md-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Statistics</a>
+                </li>
                 <li class="nav-item dropdown">
-                    <a class="navbar-brand dropdown-toggle nav-link mr-0" href="#" id="navbarDropdownMenuLink"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="dropdown-toggle nav-link mr-0" href="#" id="navbarDropdownBrowse" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Browse
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownBrowse">
+                        <a class="dropdown-item" href="{{ action('VotingController@index') }}">Votings</a>
+                        <a class="dropdown-item" href="{{ action('SetlistController@index') }}">Setlists</a>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="dropdown-toggle nav-link mr-0" href="#" id="navbarDropdownChartHistory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Chart History
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownChartHistory">
+                        <a class="dropdown-item" href="{{ action('ChartHistoryController@showLastFm') }}">LastFM</a>
+                        <a class="dropdown-item" href="{{ action('ChartHistoryController@showSpotifyTop10') }}">Spotify</a>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+            </ul>
+
+            @auth
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="navbar-brand dropdown-toggle nav-link mr-0" href="#" id="navbarDropdownMenuLink"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span>
                         {{ Auth::user()->username }}
                         </span>
-                        <img src="{{ Auth::user()->avatar }}" class="rounded" width="30" height="30"/>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        {{--<a class="dropdown-item" href="#">My Profile</a>--}}
+                            <img src="{{ Auth::user()->avatar }}" class="rounded" width="30" height="30"/>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                            {{--<a class="dropdown-item" href="#">My Profile</a>--}}
 
-                        {{--<div class="dropdown-divider"></div>--}}
-                        @if (Auth::user()->isAn('admin') || Auth::user()->isAn('superadmin'))
-                            <h6 class="dropdown-header font-weight-bold">Admin</h6>
+                            {{--<div class="dropdown-divider"></div>--}}
+                            @if (Auth::user()->isAn('admin') || Auth::user()->isAn('superadmin'))
+                                <h6 class="dropdown-header font-weight-bold">Admin</h6>
 
-                            @can('manage-voting-ballots')
-                                <a class="dropdown-item" href="{{ route('votings.index') }}">Manage Voting Ballots</a>
-                            @endcan
+                                @can('manage-voting-ballots')
+                                    <a class="dropdown-item" href="{{ route('votings.index') }}">Manage Voting Ballots</a>
+                                @endcan
 
-                            @can('manage-users')
-                                <a class="dropdown-item" href="{{ route('users.index') }}">Manage Users</a>
-                            @endcan
+                                @can('manage-users')
+                                    <a class="dropdown-item" href="{{ route('users.index') }}">Manage Users</a>
+                                @endcan
 
-                            @can('manage-songs')
-                                <a class="dropdown-item" href="{{ route('songs.index') }}">Manage Songs</a>
-                            @endcan
+                                @can('manage-songs')
+                                    <a class="dropdown-item" href="{{ route('songs.index') }}">Manage Songs</a>
+                                @endcan
 
-                            <div class="dropdown-divider"></div>
-                        @endif
+                                <div class="dropdown-divider"></div>
+                            @endif
 
-                        <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
-                    </div>
-                </li>
-            </ul>
-        @else
+                            <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            @endauth
+
+
+        @guest
             <a class="btn btn-primary btn-light" href="{{ route('login') }}">Login with Reddit</a>
-        @endif
+        @endguest
     </div>
 </nav>
 

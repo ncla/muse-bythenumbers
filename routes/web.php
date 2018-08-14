@@ -28,7 +28,7 @@ Route::get('/voting-ballots/{id}/vote-debug', 'VotingController@vote')->middlewa
 Route::get('/voting-ballots/{id}/my/stats', 'VotingController@mystats')->middleware('auth');
 Route::get('/voting-ballots/{id}/my/history', 'VotingController@myhistory')->middleware('auth');
 
-Route::get('songs/{id}', 'SongsController@show');
+Route::get('songs/{id}/{songname?}', 'SongsController@show');
 
 Route::get('chart-history/lastfm', 'ChartHistoryController@showLastFm');
 Route::get('chart-history/spotify', 'ChartHistoryController@showSpotifyTop10');
