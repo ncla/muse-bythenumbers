@@ -123,7 +123,9 @@ class VotingController extends AppBaseController
             return redirect(route('votings.index'));
         }
 
-        $voteDistribution = \App\Services\Voting::getVoteDistribution($id);
+        $voteDistributionByMatchUps = \App\Services\Voting::getVoteDistributionByMatchUps($id);
+
+        $voteDistributionByMatchupVotes = \App\Services\Voting::getVoteDistributionByMatchupVotes($id);
 
         $ranks = \App\Services\Voting::calculateStatsFromVotes($id);
 
@@ -131,10 +133,14 @@ class VotingController extends AppBaseController
 
         $userVotes = \App\Services\Voting::getVoteCountsForAllUsers($id)->sortByDesc('count');
 
+        $preCalculatedResult = \App\Services\Voting::getLatestPrecalculatedResult($id);
+
         return view('admin.votings.stats')
-            ->with('matchups', $voteDistribution)
+            ->with('matchupDistribution', $voteDistributionByMatchUps)
+            ->with('matchupVotesDistribution', $voteDistributionByMatchupVotes)
             ->with('votes_user', $userVotes)
-            ->with('ranks', $ranks);
+            ->with('ranks', $ranks)
+            ->with('precalculated_results', $preCalculatedResult);
     }
 
     /**
@@ -257,6 +263,17 @@ class VotingController extends AppBaseController
         Flash::success('Voting updated successfully.');
 
         return redirect(route('votings.show', ['id' => $id]));
+    }
+
+    public function calculate($id, Request $request)
+    {
+        $voting = $this->votingRepository->findWithoutFail($id);
+
+        \App\Services\Voting::calculateAndSaveResults($id, ($request->input('public') == '1'));
+
+        Flash::success('Calculated!');
+
+        return redirect(route('votings.index'));
     }
 
     /**

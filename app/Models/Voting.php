@@ -67,9 +67,20 @@ class Voting extends Model
         return $this->hasMany('App\Models\Voting\Matchups', 'voting_ballot_id', 'id');
     }
 
+    public function results()
+    {
+        return $this->hasMany('App\Models\Voting\Results', 'voting_ballot_id', 'id');
+    }
+
     public function getOpenStatusAttribute()
     {
         return $this->is_open === true && Carbon::now()->lessThanOrEqualTo(Carbon::parse($this->expires_on));
     }
-    
+
+    public function scopeClosed($query)
+    {
+        return $query->where($this->table . '.is_open', '=', false)
+            ->orWhere($this->table . '.expires_on', '<=', Carbon::now());
+    }
+
 }

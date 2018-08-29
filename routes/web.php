@@ -39,6 +39,7 @@ Route::group(['middleware' => 'can:manage-voting-ballots'], function() {
     Route::resource('admin/votings', 'Admin\VotingController');
 
     Route::get('admin/votings/{id}/stats', 'Admin\VotingController@showStats');
+    Route::get('admin/votings/{id}/calculate', 'Admin\VotingController@calculate');
 });
 
 Route::group(['middleware' => 'can:manage-users'], function() {

@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Voting\Matchups;
+use App\Models\Voting\Results as Result;
+use App\Models\Voting\SongResults;
 use App\Models\Voting\Songs;
 use App\Models\Voting\Votes;
 use Illuminate\Support\Collection;
@@ -166,7 +168,48 @@ class Voting
         return $allSongsStats;
     }
 
-    public static function getVoteDistribution($votingBallotID)
+    public static function calculateAndSaveResults($ballotIds, $public = true)
+    {
+        $ballotIds = is_array($ballotIds) ? $ballotIds : array($ballotIds);
+
+        foreach ($ballotIds as $id) {
+            $calculated = self::calculateStatsFromVotes($id);
+
+            if ($calculated->count() === 0) {
+                continue;
+            }
+
+            $newResult = new Result();
+            $newResult->voting_ballot_id = $id;
+            $newResult->public = $public;
+            $newResult->save();
+
+            $calculated = $calculated->map(function($songEntry) use ($newResult) {
+                $songEntry->votes_won = $songEntry->won;
+                $songEntry->votes_lost = $songEntry->lost;
+                $songEntry->total_votes = $songEntry->totalVotes;
+                $songEntry->elo_rank = $songEntry->rank;
+                $songEntry->voting_results_id = $newResult->id;
+                unset($songEntry->won, $songEntry->lost, $songEntry->totalVotes, $songEntry->rank, $songEntry->name);
+
+                // So it's not stdClass and can be passed to insertIgnore
+                return get_object_vars($songEntry);
+            });
+
+            $calculated = $calculated->values()->toArray();
+
+            SongResults::insertIgnore($calculated);
+        }
+    }
+
+    public static function getLatestPrecalculatedResult($votingBallotID)
+    {
+        return Result::ofVotingBallot($votingBallotID)->with(['songResults.song'])
+            ->orderBy('created_at', 'desc')
+            ->first();
+    }
+
+    public static function getVoteDistributionByMatchUps($votingBallotID)
     {
         return DB::table(with(new Matchups())->getTable())
             ->select('voting_matchups.id', DB::raw('IFNULL(`votesTwo`.`count`, 0) AS `count`'), 'songA.name AS songA_name', 'songB.name AS songB_name',
@@ -178,8 +221,22 @@ class Voting
             ->join('musicbrainz_songs AS songA', 'songA.id', '=', 'voting_matchups.songA_id')
             ->join('musicbrainz_songs AS songB', 'songB.id', '=', 'voting_matchups.songB_id')
             ->where('voting_ballot_id', $votingBallotID)
-            ->groupBy('voting_matchups.id')
+            //->groupBy('voting_matchups.id') // This join is unnecessary? The LEFT JOIN guaruantees only one or zero results returned.
             ->orderBy('count', 'desc')
+            ->get();
+    }
+
+    public static function getVoteDistributionByMatchupVotes($votingBallotID)
+    {
+        return DB::table(with(new Matchups())->getTable())
+            ->select(DB::raw('COUNT(*) as matchUpCount'), 'count as voteCount')
+            ->leftJoin(DB::raw('(SELECT `voting_matchup_id`, COUNT(*) as `count` FROM `votes` GROUP BY `voting_matchup_id`) AS votesTwo'),
+                function($join) {
+                    $join->on('votesTwo.voting_matchup_id', '=', 'voting_matchups.id');
+                })
+            ->where('voting_ballot_id', $votingBallotID)
+            ->groupBy('count')
+            ->orderBy('matchUpCount', 'desc')
             ->get();
     }
 

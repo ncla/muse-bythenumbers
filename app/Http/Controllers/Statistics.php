@@ -67,8 +67,30 @@ class Statistics extends Controller
                 ->toSql() . ') AS performances'), 'performances.name', '=',
                     DB::raw('COALESCE(musicbrainz_songs.name_setlistfm_override, musicbrainz_songs.name_override, musicbrainz_songs.name)'))
             ->where('musicbrainz_songs.is_utilized', '=', '1')
-            ->orderBy('musicbrainz_songs.name')
-            ->get();
+            ->orderBy('musicbrainz_songs.name');
+
+        // Get voting ballot result, that is 1. public 2. newest by creation date (voting ballot)
+        // Preferably should cache the fuck out of this?
+        $votingResultId = DB::table('voting_ballots')
+            ->select('voting_ballot_results.id', 'voting_ballot_results.created_at')
+            ->join('voting_ballot_results', 'voting_ballot_results.voting_ballot_id', '=', 'voting_ballots.id')
+            ->where('voting_ballot_results.public', '=', true)
+            ->orderByDesc('voting_ballots.created_at')
+            ->orderByDesc('voting_ballot_results.created_at')
+            ->limit(1)
+            ->get()->first();
+
+        if ($votingResultId !== null) {
+            $works->leftJoin(DB::raw('('.
+                DB::table('voting_ballot_song_results')
+                    ->select('*')
+                    ->whereRaw('voting_ballot_song_results.voting_results_id = ' . $votingResultId->id)->toSql()
+                .') as voting_ballot_song_results'), 'voting_ballot_song_results.song_id', '=', 'musicbrainz_songs.id')
+                ->addSelect('voting_ballot_song_results.winrate', 'voting_ballot_song_results.elo_rank', 'voting_ballot_song_results.total_votes',
+                    'voting_ballot_song_results.votes_won', 'voting_ballot_song_results.votes_lost');
+        }
+
+        $works = $works->get();
 
         $totalGigsPerYear = DB::table('setlists')
             ->select(DB::raw('DATE_FORMAT(`setlists`.`date`, "%Y") as `year`'), DB::raw('COUNT(*) as total_gigs'))
@@ -84,6 +106,8 @@ class Statistics extends Controller
             'works' => $works,
             'years_columns' => $years,
             'years_total_gigs' => $totalGigsPerYear,
+            'votingStatsExist' => ($votingResultId !== null),
+            'preCalculatedStatsDate' => $votingResultId->created_at ?? null
         ]);
     }
 
