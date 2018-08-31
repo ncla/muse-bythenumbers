@@ -41,7 +41,27 @@
         </div>
 
         @auth
-            @include('voting/partial/voting_vue')
+
+            @if($ballot->openStatus)
+                @include('voting/partial/voting_vue')
+            @else
+                <div class="container mt-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <div>
+                                <div class="text-center">
+                                    <div>
+                                        <h2 class="font-weight-light text-muted">Voting has ended!</h2>
+                                    </div>
+
+                                    <a href="{{ action('VotingController@index') }}" class="btn btn-outline-primary" style="max-width: 250px">View all Voting Ballots</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
         @endauth
 
         @guest

@@ -4,7 +4,7 @@
     }
 </style>
 
-<div id="voting" class="container mt-3" v-bind:class="{ loading: loading }" v-cloak>
+<div id="voting" class="container mt-1" v-bind:class="{ loading: loading }" v-cloak>
     <div class="row" v-if="errored && error !== null">
         <div class="col-12">
             <div>
