@@ -1,4 +1,3 @@
-* text eol=lf
 *.css linguist-vendored
 *.scss linguist-vendored
 *.js linguist-vendored
