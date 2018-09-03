@@ -20,6 +20,6 @@ class SongResults extends Model
 
     public function song()
     {
-        return $this->belongsTo('App\Songs', 'song_id', 'id');
+        return $this->belongsTo('App\Models\Songs', 'song_id', 'id');
     }
 }

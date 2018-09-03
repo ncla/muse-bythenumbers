@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Setlist;
-use App\SetlistSong;
-use App\Songs;
+use App\Models\Setlist;
+use App\Models\SetlistSong;
+use App\Models\Songs;
 use Artesaos\SEOTools\Traits\SEOTools;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

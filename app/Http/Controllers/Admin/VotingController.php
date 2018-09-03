@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateVotingRequest;
 use App\Models\Voting;
 use App\Repositories\VotingRepository;
 use App\Http\Controllers\AppBaseController;
-use App\Songs;
+use App\Models\Songs;
 use Illuminate\Http\Request;
 use Flash;
 use Illuminate\Support\Facades\DB;

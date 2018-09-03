@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Songs;
+use App\Models\Songs;
 
 class CreateSongsRequest extends FormRequest
 {

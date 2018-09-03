@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Songs;
+use App\Models\Songs;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**

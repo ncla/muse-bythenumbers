@@ -2,7 +2,7 @@
 
 namespace App\Scrapers\SetlistFm;
 
-use App\Setlist;
+use App\Models\Setlist;
 use GuzzleHttp;
 use GuzzleHttp\Promise\EachPromise;
 use GuzzleHttp\Pool;

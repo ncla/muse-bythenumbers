@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Setlist;
+use App\Models\Setlist;
 /*
 |--------------------------------------------------------------------------
 | API Routes

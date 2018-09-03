@@ -6,7 +6,7 @@ use App\Http\Requests\CreateSongsRequest;
 use App\Http\Requests\UpdateSongsRequest;
 use App\Repositories\SongsRepository;
 use App\Http\Controllers\AppBaseController;
-use App\Songs;
+use App\Models\Songs;
 use Illuminate\Http\Request;
 use Flash;
 use Illuminate\Support\Facades\DB;

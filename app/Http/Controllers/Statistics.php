@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Setlist;
+use App\Models\Setlist;
 use Artesaos\SEOTools\Traits\SEOTools;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;

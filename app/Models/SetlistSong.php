@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,6 +16,6 @@ class SetlistSong extends Model
 
     public function setlist()
     {
-        return $this->belongsTo('App\Setlist', 'name');
+        return $this->belongsTo('App\Models\Setlist', 'name');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Yadakhov\InsertOnDuplicateKey;
@@ -46,7 +46,7 @@ class Setlist extends Model
 
     public function songs()
     {
-        return $this->hasMany('App\SetlistSong', 'id', 'id');
+        return $this->hasMany('App\Models\SetlistSong', 'id', 'id');
     }
 
     public function getVenueFullNameAttribute()

@@ -105,7 +105,7 @@
         <div class="row">
             <div class="col-sm-6">
                 <div>Developed by <a href="https://ncla.me">ncla</a>, © {{ date('Y') }}</div>
-                <div>Data provided by setlist.fm and last.fm</div>
+                <div>Data provided by Setlist.fm, Last.fm, Spotify</div>
             </div>
             <div class="col-sm-6 text-sm-right">
                 @php

@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Setlist;
+use App\Models\Setlist;
 use InfyOm\Generator\Common\BaseRepository;
 
 /**
