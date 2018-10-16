@@ -23,8 +23,9 @@ Route::get('/members/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/voting-ballots/', 'VotingController@index');
 Route::get('/voting-ballots/{id}', 'VotingController@show');
-Route::post('/voting-ballots/{id}/vote', 'VotingController@vote')->middleware('auth');
-Route::get('/voting-ballots/{id}/vote-debug', 'VotingController@vote')->middleware('auth');
+Route::post('/voting-ballots/{id}/vote', 'VotingController@vote')->middleware('auth', 'measure-request');
+Route::get('/voting-ballots/{id}/vote-debug', 'VotingController@vote')->middleware('auth', 'measure-request');
+
 Route::get('/voting-ballots/{id}/my/stats', 'VotingController@mystats')->middleware('auth');
 Route::get('/voting-ballots/{id}/my/history', 'VotingController@myhistory')->middleware('auth');
 

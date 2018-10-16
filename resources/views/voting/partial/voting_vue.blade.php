@@ -148,8 +148,7 @@
             },
             methods: {
                 sendVote(votedOn) {
-                    // No fucking way you can determine which song is best under 750ms
-                    if (responseReceivedTime !== null && (+new Date() - responseReceivedTime) < 750) {
+                    if (responseReceivedTime !== null && (+new Date() - responseReceivedTime) < 500) {
                         return;
                     }
 
@@ -163,7 +162,9 @@
                     if (votedOn !== null) {
                         postData = {
                             'voting_matchup_id': this.$data.voteData.matchup.matchup_data.id,
-                            'voted_on': votedOn
+                            'voted_on': votedOn,
+                            'time': new Date().getTime(),
+                            'time_last_response': responseReceivedTime
                         };
                     }
 

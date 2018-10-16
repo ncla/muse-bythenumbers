@@ -58,7 +58,6 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'user.can-manage-users' => \App\Http\Middleware\UserCanManageUsers::class,
-        'user.is-admin' => \App\Http\Middleware\UserCanManageSongs::class
+        'measure-request' => \App\Http\Middleware\MeasureRequestForCheating::class
     ];
 }

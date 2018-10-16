@@ -72,11 +72,11 @@
 
                 <p>If I expose the statistics right now, then some users would be voting on match-ups based on how the song is currently doing in the ranking. You can however view your own voting history and statistics!</p>
 
-                <p>However the site has ability to pre-calculate statistics whenever, meaning users</p>
+                <p>However the site has ability to pre-calculate statistics whenever, meaning users can see the results, but the they would be frozen in time, outdated.</p>
 
                 <p><strong>I have a problem / inquiry / feedback.</strong></p>
 
-                <p>/u/iamncla on Reddit or e-mail: bythenumbers [at] ncla.me</p>
+                <p>Please write me on Reddit /u/iamncla or e-mail: bythenumbers [at] ncla.me</p>
 
                 {{--<p><strong></strong></p>--}}
 
