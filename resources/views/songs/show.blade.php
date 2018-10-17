@@ -8,58 +8,56 @@
                 <strong>Total performance count per year</strong>
             </div>
 
+            @push('scripts')
+                <script src="//code.highcharts.com/highcharts.js"></script>
+            @endpush
+
             @if(count($statsSetlistAppearance['years']) > 0)
-                <div style="height: 250px" class="col-12">
-                    <canvas id="performanceCountChart" height="200px"></canvas>
+                <div class="col-12">
+                    <div id="performanceCountChartcontainer" style=" height: 250px; margin: 0 auto"></div>
                 </div>
 
                 @push('scripts')
                     <script>
-                        var performanceCountChart = new Chart(document.getElementById("performanceCountChart").getContext('2d'), {
-                            type: 'bar',
-                            data: {
-                                labels: {{ json_encode($statsSetlistAppearance['years']) }},
-                                datasets: [
-                                    {
-                                        label: '# of performances',
-                                        data: {{ json_encode($statsSetlistAppearance['plays']) }},
-                                        backgroundColor: 'rgb(95, 167, 206)',
-                                        borderWidth: 0
-                                    },
-                                    {
-                                        label: '# of total gigs',
-                                        data: {{ json_encode($statsSetlistAppearance['totalgigs']) }},
-                                        backgroundColor: 'rgb(164, 201, 221)',
-                                        borderWidth: 0
-                                    }
-                                ]
+
+                        Highcharts.chart('performanceCountChartcontainer', {
+                            chart: {
+                                type: 'column',
+                                marginTop: 25
                             },
-                            options: {
-                                scales: {
-                                    yAxes: [{
-                                        ticks: {
-                                            beginAtZero: true,
-                                        }
-                                    }],
-                                    xAxes: [{
-                                        stacked: true,
-                                        maxBarThickness: 100,
-                                        padding: {
-                                            top: 50,
-                                        },
-                                    }]
+                            title: {
+                                text: null
+                            },
+                            xAxis: {
+                                categories: {{ json_encode($statsSetlistAppearance['years']) }}
+                            },
+                            yAxis: {
+                                min: 0,
+                                title: {
+                                    text: null
                                 },
-                                tooltips: {
-                                    yAlign: 'bottom'
-                                },
-                                layout: {
-                                    padding: {
-                                        top: 10,
-                                    }
-                                },
-                                responsive: true,
-                                maintainAspectRatio: false,
-                            }
+                                endOnTick: true
+                            },
+                            legend: {
+                                reversed: true
+                            },
+                            plotOptions: {
+                                column: {
+                                    grouping: false
+                                }
+                            },
+                            tooltip: {
+                                shared: true
+                            },
+                            series: [{
+                                name: 'Total gigs',
+                                data: {{ json_encode($statsSetlistAppearance['totalgigs']) }},
+                                stack: 'year'
+                            }, {
+                                name: 'Total performances',
+                                data: {{ json_encode($statsSetlistAppearance['plays']) }},
+                                stack: 'year'
+                            }]
                         });
                     </script>
                 @endpush
@@ -146,74 +144,100 @@
             <div class="col-12">
                 <strong>LastFM weekly listeners and chart position history</strong>
             </div>
-            <div style="height: 250px" class="col-12">
-                <canvas id="lastfmListeners" height="200px"></canvas>
-            </div>
         </div>
 
-        @push('scripts')
-            <script>
-                var lastFmChart = new Chart(document.getElementById("lastfmListeners").getContext('2d'), {
-                    type: 'line',
-                    data: {
-                        labels: JSON.parse('{!! json_encode($lastfmListenerHistory['time']) !!}'),
-                        datasets: [
+        @if(count($lastfmListenerHistory['listeners']) > 0)
+            <div class="row">
+                <div class="col-12">
+                    <div id="lastfmListenerscontainer" style=" height: 250px; margin: 0 auto"></div>
+                </div>
+            </div>
+
+            @push('scripts')
+                <script>
+                    Highcharts.chart('lastfmListenerscontainer', {
+                        chart: {
+                            marginTop: 25
+                        },
+                        title: {
+                            text: null
+                        },
+                        xAxis: {
+                            type: 'datetime',
+                            title: {
+                                text: 'Date'
+                            },
+                            crosshair: true
+                        },
+                        tooltip: {
+                            shared: true
+                        },
+                        yAxis: [
                             {
-                                label: '# of listeners in last 7 days',
-                                data: JSON.parse('{!! json_encode($lastfmListenerHistory['listeners']) !!}'),
-                                // lineTension: 0,
-                                backgroundColor: 'rgba(0, 0, 0, 0)',
-                                borderColor: '#E34A58',
-                                yAxisID: 'y-axis-listeners'
+                                title: {
+                                    text: 'Listeners (7 days)'
+                                }
                             },
                             {
-                                label: 'Chart position',
-                                data: JSON.parse('{!! json_encode($lastfmListenerHistory['chart_index']) !!}'),
-                                lineTension: 0,
-                                backgroundColor: 'rgba(0, 0, 0, 0)',
-                                borderColor: '#33BEED',
-                                yAxisID: 'y-axis-chartposition',
+                                title: {
+                                    text: 'Chart Index'
+                                },
+                                opposite: true,
+                                reversed: true,
+                                tickInterval: 1,
+                                allowDecimals: false,
                             }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            xAxes: [{
-                                type: 'time',
-                                time: {
-                                    displayFormats: {'day': 'DD-MM'},
-                                    tooltipFormat: 'DD/MM/YY',
-                                    unit: 'day',
-                                },
-                                padding: {
-                                    top: 50,
-                                },
-                            }],
-                            yAxes: [
-                                {
-                                    id: 'y-axis-listeners',
-                                    position: 'left',
-                                },
-                                {
-                                    id: 'y-axis-chartposition',
-                                    position: 'right',
-                                    // ticks: {
-                                    //     stepSize: 1
-                                    // }
+                        ],
+                        legend: {
+                            layout: 'horizontal',
+                        },
+                        plotOptions: {
+                            series: {
+                                label: {
+                                    connectorAllowed: false
                                 }
-                            ]
-                        },
-                        layout: {
-                            padding: {
-                                top: 10,
                             }
                         },
-                        responsive: true,
-                        maintainAspectRatio: false,
-                    }
-                });
-            </script>
-        @endpush
+
+                        series: [
+                            {
+                                name: 'Listeners (7 days)',
+                                data: JSON.parse('{!! json_encode($lastfmListenerHistory['listeners']) !!}')
+                            },
+                            {
+                                name: 'Chart Index',
+                                data: JSON.parse('{!! json_encode($lastfmListenerHistory['chart_index']) !!}'),
+                                yAxis: 1
+                            }
+                        ],
+
+                        responsive: {
+                            rules: [{
+                                condition: {
+                                    maxWidth: 500
+                                },
+                                chartOptions: {
+                                    legend: {
+                                        layout: 'horizontal',
+                                        align: 'center',
+                                        verticalAlign: 'bottom'
+                                    }
+                                }
+                            }]
+                        }
+
+                    });
+                </script>
+            @endpush
+        @else
+            <div class="row">
+                <div class="col-12">
+                    <div class="bg-white text-center p-3 my-2 border">
+                        No data.
+                    </div>
+                </div>
+            </div>
+        @endif
 
     </div>
 @endsection

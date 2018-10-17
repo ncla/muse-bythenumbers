@@ -8,7 +8,6 @@
 require('./bootstrap');
 require('popper.js');
 require('axios');
-require('chart.js');
 require('datatables.net-bs4');
 window.moment = require('moment');
 window.Vue = require('vue');

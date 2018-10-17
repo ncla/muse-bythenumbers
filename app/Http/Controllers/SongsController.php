@@ -95,9 +95,12 @@ class SongsController extends Controller
                 'next' => $nextOnly
             ])
             ->with('lastfmListenerHistory', [
-                'time' => $lastFmListenersHistory->pluck('created_at'),
-                'listeners' => $lastFmListenersHistory->pluck('listeners_week'),
-                'chart_index' => $lastFmListenersHistory->pluck('chart_index')
+                'listeners' => $lastFmListenersHistory->map(function($item) {
+                    return [strtotime($item->created_at) * 1000, $item->listeners_week];
+                }),
+                'chart_index' => $lastFmListenersHistory->map(function($item) {
+                    return [strtotime($item->created_at) * 1000, $item->chart_index];
+                })
             ]);
     }
 }
