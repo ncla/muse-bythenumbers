@@ -38,7 +38,7 @@ class Statistics extends Controller
                 (SELECT `lastfm_tracks`.`track_name`, `lastfm_tracks`.`listeners_week`, `lastfm_tracks`.`created_at`
                 FROM `lastfm_tracks`
                 INNER JOIN (
-                    SELECT `track_name`, MAX(`created_at`) created_at_newest FROM `lastfm_tracks` 
+                    SELECT `track_name`, MAX(`created_at`) created_at_newest FROM `lastfm_tracks`
                     GROUP BY `track_name`
                 ) aLastFm ON `lastfm_tracks`.`track_name` = `aLastFm`.`track_name` AND `lastfm_tracks`.`created_at` = `aLastFm`.`created_at_newest`
                 ORDER BY `listeners_week` desc) as lastfm_tracks
@@ -46,15 +46,10 @@ class Statistics extends Controller
                     DB::raw('COALESCE(musicbrainz_songs.name_lastfm_override, musicbrainz_songs.name_override, musicbrainz_songs.name)'))
             ->leftJoin(
                 DB::raw('(SELECT `spotify_top_tracks`.`track_id`, `spotify_top_tracks`.`chart_index`, `spotify_tracks`.`track_name`, `spotify_top_tracks`.`created_at`
-                        FROM `spotify_top_tracks`
-                        INNER JOIN (
-                          SELECT `track_id`, MAX(`created_at`) created_at_newest FROM `spotify_top_tracks`
-                          GROUP BY `track_id`
-                        ) aSpotifyTop ON
-                                    `spotify_top_tracks`.`track_id` = `aSpotifyTop`.`track_id`
-                                     AND `spotify_top_tracks`.`created_at` = `aSpotifyTop`.`created_at_newest`
-                        INNER JOIN `spotify_tracks` ON `spotify_tracks`.`track_id` = `spotify_top_tracks`.`track_id`
-                        ORDER BY `chart_index` asc) as spotify_top_tracks'),
+                            FROM `spotify_top_tracks`
+                            INNER JOIN `spotify_tracks` ON `spotify_tracks`.`track_id` = `spotify_top_tracks`.`track_id`
+                            WHERE `spotify_top_tracks`.`created_at` = (SELECT MAX(created_at) FROM `spotify_top_tracks`)
+                            ORDER BY `spotify_top_tracks`.`chart_index`) as spotify_top_tracks'),
                 'spotify_top_tracks.track_name', '=', DB::raw('COALESCE(musicbrainz_songs.name_spotify_override, musicbrainz_songs.name_override, musicbrainz_songs.name)')
             )
             ->leftJoin(DB::raw('(' . DB::table('setlist_songs')
