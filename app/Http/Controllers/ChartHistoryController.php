@@ -21,17 +21,32 @@ class ChartHistoryController extends Controller
                 DB::raw('COALESCE(musicbrainz_songs.name_lastfm_override, musicbrainz_songs.name_override, musicbrainz_songs.name)'))
             ->whereDate('lastfm_tracks.created_at', '>=', Carbon::now()->subMonth(3))
             ->where('musicbrainz_songs.is_utilized', 1)
+            ->where('lastfm_tracks.chart_index', '<=', 50)
             ->orderBy('lastfm_tracks.created_at', 'desc')
             ->get();
 
+        $timestampsUnique = $history->pluck('timestamp')->unique()->flip();
+
+        $timestampsUnique = $timestampsUnique->map(function($val, $index) {
+            return [$index, null];
+        });
+
         $history = $history->groupBy('track_name')->sortKeys();
 
-        $history = $history->map(function ($item, $key) {
+        $history = $history->map(function ($item, $key) use($timestampsUnique) {
+            $timeline = clone $timestampsUnique;
+
+            $item->each(function($it, $ke) use($timeline) {
+                if (isset($timeline[$it->timestamp])) {
+                    $timeline[$it->timestamp] = [$it->timestamp, $it->chart_index];
+                }
+            });
+
+            $timeline = $timeline->values();
+
             return [
                 'name' => $key,
-                'data' => $item->map(function($it, $ke) {
-                    return [$it->timestamp, $it->chart_index];
-                })
+                'data' => $timeline
             ];
         })->values();
 

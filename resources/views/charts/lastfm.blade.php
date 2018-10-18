@@ -12,13 +12,25 @@
                 <div id="container" style="min-width: 310px; height: 1400px; margin: 0 auto"></div>
 
                 @push('scripts')
-                    <script src="//code.highcharts.com/highcharts.js"></script>
+                    <script src="//code.highcharts.com/stock/highstock.js"></script>
 
                     <script>
 
                         Highcharts.chart('container', {
                             chart: {
-                                type: 'spline'
+                                type: 'spline',
+                                zoomType: 'x'
+                            },
+                            navigator: {
+                                enabled: true,
+                                yAxis: {
+                                    reversed: true
+                                },
+                                height: 30,
+                                margin: 6,
+                                series: {
+                                    lineColor: 'rgba(0, 0, 0, 0.45)'
+                                }
                             },
                             title: {
                                 text: 'Last.FM Chart Index'
@@ -28,13 +40,14 @@
                             },
                             xAxis: {
                                 type: 'datetime',
-                                dateTimeLabelFormats: { // don't display the dummy year
+                                dateTimeLabelFormats: {
                                     month: '%e. %b',
                                     year: '%b'
                                 },
                                 title: {
                                     text: 'Date'
-                                }
+                                },
+                                range: 2 * 30 * 24 * 3600 * 1000
                             },
                             yAxis: {
                                 title: {
@@ -42,7 +55,8 @@
                                 },
                                 min: 0,
                                 max: 50,
-                                reversed: true
+                                reversed: true,
+                                tickInterval: 1
                             },
                             tooltip: {
                                 headerFormat: '<b>{series.name}</b><br>',

@@ -40,7 +40,7 @@
                             },
                             xAxis: {
                                 type: 'datetime',
-                                dateTimeLabelFormats: { // don't display the dummy year
+                                dateTimeLabelFormats: {
                                     month: '%e. %b',
                                     year: '%b'
                                 },
