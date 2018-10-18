@@ -51,7 +51,7 @@ class ChartHistoryController extends Controller
                 DB::raw('COALESCE(musicbrainz_songs.name_spotify_override, musicbrainz_songs.name_override, musicbrainz_songs.name)'))
             ->whereDate('spotify_top_tracks.created_at', '>=', Carbon::now()->subMonth(3))
             ->where('musicbrainz_songs.is_utilized', 1)
-            ->orderBy('spotify_top_tracks.created_at', 'desc')
+            ->orderBy('spotify_top_tracks.created_at', 'asc')
             ->get();
 
         // Each song shared the same timeline of timestamps. If a song doesn't have a recorded chart index at certain point,

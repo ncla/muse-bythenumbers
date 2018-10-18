@@ -9,16 +9,28 @@
 
             <div class="col-12">
 
-                <div id="container" style="min-width: 310px; height: 450px; margin: 0 auto"></div>
+                <div id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
 
                 @push('scripts')
-                    <script src="//code.highcharts.com/highcharts.js"></script>
+                    <script src="//code.highcharts.com/stock/highstock.js"></script>
 
                     <script>
 
                         Highcharts.chart('container', {
                             chart: {
-                                type: 'spline'
+                                type: 'spline',
+                                zoomType: 'x'
+                            },
+                            navigator: {
+                                enabled: true,
+                                yAxis: {
+                                    reversed: true
+                                },
+                                height: 60,
+                                margin: 6,
+                                series: {
+                                    lineColor: 'rgba(0, 0, 0, 0.45)'
+                                }
                             },
                             title: {
                                 text: 'Spotify TOP10 Chart Index'
@@ -34,7 +46,8 @@
                                 },
                                 title: {
                                     text: 'Date'
-                                }
+                                },
+                                range: 2 * 30 * 24 * 3600 * 1000
                             },
                             yAxis: {
                                 title: {
@@ -68,7 +81,8 @@
                                             enabled: true,
                                             lineWidthPlus: 2
                                         }
-                                    }
+                                    },
+                                    showInNavigator: true
                                 }
                             },
 
