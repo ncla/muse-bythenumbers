@@ -9,7 +9,7 @@
 
             <div class="col-12">
 
-                <div id="container" style="min-width: 310px; height: 700px; margin: 0 auto"></div>
+                <div id="container" style="min-width: 310px; height: 450px; margin: 0 auto"></div>
 
                 @push('scripts')
                     <script src="//code.highcharts.com/highcharts.js"></script>
@@ -41,8 +41,8 @@
                                     text: 'Chart index'
                                 },
                                 min: 0,
-                                max: 15,
-                                reversed: true
+                                reversed: true,
+                                tickInterval: 1
                             },
                             tooltip: {
                                 headerFormat: '<b>{series.name}</b><br>',

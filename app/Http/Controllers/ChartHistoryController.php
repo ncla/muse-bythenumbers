@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Artesaos\SEOTools\Traits\SEOTools;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -53,14 +54,32 @@ class ChartHistoryController extends Controller
             ->orderBy('spotify_top_tracks.created_at', 'desc')
             ->get();
 
+        // Each song shared the same timeline of timestamps. If a song doesn't have a recorded chart index at certain point,
+        // then that point is marked as null. This is so that the chart doesn't connect points that have a gap in time.
+        // That's why we are manipulating data in such way for the chart
+
+        $timestampsUnique = $history->pluck('timestamp')->unique()->flip();
+
+        $timestampsUnique = $timestampsUnique->map(function($val, $index) {
+            return [$index, null];
+        });
+
         $history = $history->groupBy('track_name')->sortKeys();
 
-        $history = $history->map(function ($item, $key) {
+        $history = $history->map(function (Collection $item, $key) use($timestampsUnique) {
+            $timeline = clone $timestampsUnique;
+
+            $item->each(function($it, $ke) use($timeline) {
+                if (isset($timeline[$it->timestamp])) {
+                    $timeline[$it->timestamp] = [$it->timestamp, $it->chart_index];
+                }
+            });
+
+            $timeline = $timeline->values();
+
             return [
                 'name' => $key,
-                'data' => $item->map(function($it, $ke) {
-                    return [$it->timestamp, $it->chart_index];
-                })
+                'data' => $timeline
             ];
         })->values();
 

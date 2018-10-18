@@ -72,15 +72,6 @@ class SongsController extends Controller
                                             ->where('track_name', $song->lastfmName)
                                             ->get();
 
-        //dump($lastFmListenersHistory, $lastFmListenersHistory->pluck('created_at'));
-
-        // Setlist: play count per year + % in year, % of overall
-        // songs that follow before and after in setlist, usually
-        // lastfm listeners history
-        // lastfm chart position
-
-        // elo winrate, place, elo rank
-
         $this->seo()->setTitle($song->name);
 
         return view('songs.show')
