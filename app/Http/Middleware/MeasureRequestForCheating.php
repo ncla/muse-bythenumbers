@@ -42,7 +42,7 @@ class MeasureRequestForCheating
                         $clientDiff = round(( floatval($request->input('time')) - floatval($request->input('time_last_response')) ) / 1000, 3);
                     }
 
-                    DB::table('fast_voters')
+                    DB::table('users_fast_voters')
                         ->insert([
                             'time_between_votes' => $diff,
                             'time_between_votes_client' => $clientDiff,

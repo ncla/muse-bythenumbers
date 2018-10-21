@@ -4,9 +4,9 @@ namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Logins extends Model
+class FastVoters extends Model
 {
-    public $table = 'users_logins';
+    public $table = 'users_fast_voters';
 
     public $timestamps = false;
 
@@ -14,6 +14,8 @@ class Logins extends Model
 
     protected $fillable = [
         'user_id',
+        'time_between_votes',
+        'time_between_votes_client',
         'browser_useragent',
         'ip_address'
     ];

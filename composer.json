@@ -22,7 +22,8 @@
         "socialiteproviders/reddit": "^3.0",
         "yadakhov/insert-on-duplicate-key": "^1.2",
         "yajra/laravel-datatables": "^1.0",
-        "yajra/laravel-datatables-oracle": "~8.0"
+        "yajra/laravel-datatables-oracle": "~8.0",
+        "laravel/nova": "~1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.1",
@@ -33,6 +34,12 @@
         "phpunit/phpunit": "~7.0",
         "barryvdh/laravel-ide-helper": "^2.4"
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        }
+    ],
     "autoload": {
         "classmap": [
             "database/seeds",

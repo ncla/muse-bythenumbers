@@ -169,6 +169,7 @@ return [
         InfyOm\CoreTemplates\CoreTemplatesServiceProvider::class,
 
         Yajra\DataTables\DataTablesServiceProvider::class,
+        App\Providers\NovaServiceProvider::class
     ],
 
     /*

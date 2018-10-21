@@ -47,4 +47,14 @@ class User extends Authenticatable
     public static $rules = [
 
     ];
+
+    public function fastVoters()
+    {
+        return $this->hasMany('App\Models\Users\FastVoters');
+    }
+
+    public function logins()
+    {
+        return $this->hasMany('App\Models\Users\Logins');
+    }
 }
