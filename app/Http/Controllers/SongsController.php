@@ -72,10 +72,18 @@ class SongsController extends Controller
                                             ->where('track_name', $song->lastfmName)
                                             ->get();
 
+        $spotifyAlbumArtUrl = new \App\Services\Songs();
+        $spotifyAlbumArtUrl = $spotifyAlbumArtUrl->getSong($id)->album_image_url;
+
         $this->seo()->setTitle($song->name);
+
+        if ($spotifyAlbumArtUrl) {
+            $this->seo()->addImages($spotifyAlbumArtUrl);
+        }
 
         return view('songs.show')
             ->with('song', $song)
+            ->with('albumImageUrl', $spotifyAlbumArtUrl)
             ->with('statsSetlistAppearance', [
                 'years' => $setlistApperancesYears,
                 'plays' => $setlistApperancesPlays,

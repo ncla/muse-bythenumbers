@@ -66,6 +66,10 @@
                             @if (Auth::user()->isAn('admin') || Auth::user()->isAn('superadmin'))
                                 <h6 class="dropdown-header font-weight-bold">Admin</h6>
 
+                                @if (Auth::user()->isAn('superadmin'))
+                                    <a class="dropdown-item" href="{{config('nova.path') }}">Nova</a>
+                                @endif
+
                                 @can('manage-voting-ballots')
                                     <a class="dropdown-item" href="{{ route('votings.index') }}">Manage Voting Ballots</a>
                                 @endcan

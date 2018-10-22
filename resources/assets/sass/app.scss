@@ -117,3 +117,64 @@ table.table-xs {
   }
 
 }
+
+
+.song-page {
+  .blur-head-bg {
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .album-img {
+    height: 200px;
+  }
+
+  .header-text {
+    min-height: 200px;
+
+    > .row {
+      min-height: inherit;
+    }
+
+    h1 {
+      background: #eeeeee;
+      padding: 0.2rem 0.8rem;
+    }
+
+    .album-artwork-img {
+      width: 150px;
+      height: 150px;
+    }
+  }
+
+  .album-img {
+    width: 100%;
+    overflow: hidden;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #FFFFFF;
+
+    img {
+      width: 100%;
+      transform: scale(1.04);
+      filter: blur(15px) grayscale(70%);
+      opacity: 0.45;
+    }
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .song-page {
+    .header-text {
+      h1 {
+        font-size: 1.35rem;
+      }
+
+      .album-artwork-img {
+        width: 75px;
+        height: 75px;
+      }
+    }
+  }
+}
