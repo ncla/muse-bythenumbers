@@ -164,6 +164,13 @@ table.table-xs {
   }
 }
 
+.user-voting-history {
+  .skipped-vote {
+    text-decoration: line-through;
+    color: #b5b5b5;
+  }
+}
+
 @include media-breakpoint-down(xs) {
   .song-page {
     .header-text {

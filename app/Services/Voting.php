@@ -10,6 +10,7 @@ use App\Models\Voting\Votes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Src\Rating;
+use Illuminate\Support\Facades\Log;
 
 class Voting
 {
@@ -24,11 +25,13 @@ class Voting
                                         FROM `voting_matchups`
                                         INNER JOIN `votes` ON `voting_matchups`.`id` = `votes`.`voting_matchup_id`
                                         WHERE `voting_matchups`.`voting_ballot_id` = ' . intval($votingBallotID) . '
+                                        AND `votes`.`winner_song_id` IS NOT NULL
                                         UNION ALL
                                         SELECT `voting_matchups`.`songB_id` AS song_id
                                         FROM `voting_matchups`
                                         INNER JOIN `votes` ON `voting_matchups`.`id` = `votes`.`voting_matchup_id`
-                                        WHERE `voting_matchups`.`voting_ballot_id` = ' . intval($votingBallotID) . ')
+                                        WHERE `voting_matchups`.`voting_ballot_id` = ' . intval($votingBallotID) . '
+                                        AND `votes`.`winner_song_id` IS NOT NULL)
                                     song_votes
                                     GROUP BY `song_id`';
 
@@ -72,10 +75,11 @@ class Voting
     public static function calculateStatsFromVotes($votingBallotID, $userID = null)
     {
         \Debugbar::startMeasure('allvotes_query');
-        // voting matchups > votes
+        // voting matchups > votes?
         $allVotes = DB::table(with(new Matchups())->getTable())
                 ->join('votes', 'votes.voting_matchup_id', '=', 'voting_matchups.id')
                 ->where('voting_ballot_id', $votingBallotID)
+                ->whereNotNull('votes.winner_song_id')
                 ->orderBy('votes.created_at', 'asc');
 
         if ($userID) {
@@ -85,12 +89,6 @@ class Voting
         $allVotes = $allVotes->get();
 
         \Debugbar::stopMeasure('allvotes_query');
-
-        //dump($allVotes); return;
-
-        // all songs have ID, iterate through all vote results, calcualte winrate and
-
-        // all songs to DB voting_ballot_songs
 
         \Debugbar::startMeasure('allsongs_query');
 
@@ -120,9 +118,14 @@ class Voting
         \Debugbar::startMeasure('allVotes_each1');
 
         $allVotes->each(function($item) use (&$allSongsStats) {
+            // Even if we do filter skipped votes, we have this just in case!
+            if ($item->winner_song_id === null) {
+                return true;
+            }
+
             // Checking if song IDs exist in $allSongsStats. This can happen if voting ballot has swapped some songs.
             if (!isset($allSongsStats[$item->songA_id], $allSongsStats[$item->songB_id])) {
-                return false;
+                return true;
             }
 
             $loserId = ($item->songA_id === $item->winner_song_id) ? $item->songB_id : $item->songA_id;
@@ -214,7 +217,8 @@ class Voting
         return DB::table(with(new Matchups())->getTable())
             ->select('voting_matchups.id', DB::raw('IFNULL(`votesTwo`.`count`, 0) AS `count`'), 'songA.name AS songA_name', 'songB.name AS songB_name',
                 'songA.id AS songA_id', 'songB.id AS songB_id')
-            ->leftJoin(DB::raw('(SELECT `voting_matchup_id`, COUNT(*) as `count` FROM `votes` GROUP BY `voting_matchup_id`) AS votesTwo'),
+            ->leftJoin(DB::raw('(SELECT `voting_matchup_id`, COUNT(*) as `count` FROM `votes`
+                                WHERE `votes`.`winner_song_id` IS NOT NULL GROUP BY `voting_matchup_id`) AS votesTwo'),
                 function($join) {
                     $join->on('votesTwo.voting_matchup_id', '=', 'voting_matchups.id');
                 })
@@ -256,7 +260,7 @@ class Voting
             ->join('voting_matchups', 'votes.voting_matchup_id', '=', 'voting_matchups.id')
             ->join('musicbrainz_songs AS songA', 'songA.id', '=', 'voting_matchups.songA_id')
             ->join('musicbrainz_songs AS songB', 'songB.id', '=', 'voting_matchups.songB_id')
-            ->join('musicbrainz_songs AS winner_song', 'winner_song.id', '=', 'votes.winner_song_id')
+            ->leftJoin('musicbrainz_songs AS winner_song', 'winner_song.id', '=', 'votes.winner_song_id')
             ->where('voting_matchups.voting_ballot_id', $votingBallotID);
 
         if ($userID) {

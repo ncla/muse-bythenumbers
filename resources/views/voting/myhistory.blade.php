@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container mt-3 pb-3">
+    <div class="container mt-3 pb-3 user-voting-history">
 
         <div class="row">
             <div class="col-12">
@@ -31,7 +31,9 @@
                 </thead>
                 <tbody>
                 @foreach($history as $entry)
-                    <tr>
+                    <tr class="
+                        @if($entry->winner_song_id === null) skipped-vote @endif
+                    ">
                         <td @if($entry->songA_id === $entry->winner_song_id) class="font-weight-bold" @endif>
                             {{ $entry->songA_name }}
                         </td>
@@ -54,7 +56,10 @@
                             [25, 50, 100, 200, -1],
                             [25, 50, 100, 200, "All"]
                         ],
-                        iDisplayLength: 25
+                        iDisplayLength: 25,
+                        "order": [
+                            [2, "desc"]
+                        ]
                     });
                 });
             </script>

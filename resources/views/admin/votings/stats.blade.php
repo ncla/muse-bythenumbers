@@ -134,7 +134,7 @@
 
                 <div class="row">
                         <div class="col-12">
-                                <p>This is a summary of the Vote Distribution table. If you want to see all match-ups, see Vote Distribution table.</p>
+                                <p>This is a summary of the Vote Distribution table. If you want to see all match-ups, see Vote Distribution table. This includes skipped votes.</p>
 
                                 <table class="table table-bordered table-sm table-hover table-xs dt-responsive" id="votings-table">
                                         <thead>

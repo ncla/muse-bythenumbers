@@ -4,7 +4,28 @@
     }
 </style>
 
-<div id="voting" class="container mt-1" v-bind:class="{ loading: loading }" v-cloak>
+<div class="modal fade" id="confirmVoteSkip" tabindex="-1" role="dialog" aria-labelledby="confirmVoteSkipLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                If you decide to skip voting for a match-up, then the vote skip will be recorded in the database, and you will no longer be able to vote on the match-up you decide to skip.
+
+                Skipped votes do not contribute to the statistics generated on this website.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmVoteSkipBtn" data-dismiss="modal">I understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="voting" data-ballot-id="{{ $ballot->id }}" class="container mt-1" v-bind:class="{ loading: loading }" v-cloak>
     <div class="row" v-if="errored && error !== null">
         <div class="col-12">
             <div>
@@ -77,9 +98,12 @@
                 </div>
 
             </div>
+
             <div class="col-12 col-lg-2 versus-text align-self-center text-center">
-                <h2>vs</h2>
+                <button type="button" class="btn btn-outline-secondary vote-btn mx-auto my-3 my-lg-0"
+                        v-on:click="skipVote()">Skip</button>
             </div>
+
             <div class="col-12 col-lg-5 matchup-song-container songB p-3 text-center text-lg-left">
 
                 <div class="row">
@@ -117,127 +141,6 @@
 
 @push('scripts')
     <script>
-        // http://www.javascriptkit.com/dhtmltutors/sticky-hover-issue-solutions.shtml
-        document.addEventListener('touchstart', function addtouchclass(e) {
-            document.documentElement.classList.add('can-touch');
-            document.removeEventListener('touchstart', addtouchclass, false);
-        }, false);
 
-        $('.btn').mousedown(function(e){
-            e.preventDefault();
-        });
-
-        var responseReceivedTime = null;
-
-        new Vue({
-            el: '#voting',
-            data: {
-                // storing some stuff out of data so it doesnt update all the time?
-                loading: true,
-                errored: false,
-                error: null,
-                voteData: null,
-                votingProgress: null,
-                iframesLoading: {
-                    0: true,
-                    1: true
-                }
-            },
-            mounted () {
-                this.sendVote(null);
-            },
-            methods: {
-                sendVote(votedOn) {
-                    if (responseReceivedTime !== null && (+new Date() - responseReceivedTime) < 500) {
-                        return;
-                    }
-
-                    this.loading = true;
-                    this.iframesLoading[0] = this.iframesLoading[1] = true;
-
-                    document.removeEventListener('keyup', this.keyPressed);
-
-                    var postData = {};
-
-                    if (votedOn !== null) {
-                        postData = {
-                            'voting_matchup_id': this.$data.voteData.matchup.matchup_data.id,
-                            'voted_on': votedOn,
-                            'time': new Date().getTime(),
-                            'time_last_response': responseReceivedTime
-                        };
-                    }
-
-                    return axios.post('/voting-ballots/{{$ballot->id}}/vote', postData).then(response => {
-                        this.voteData = response.data;
-                        this.loading = false;
-
-                        if (this.voteData.matchup.matchup_data !== null) {
-                            document.addEventListener('keyup', this.keyPressed);
-                        }
-
-                        this.votingProgress = response.data.user_voting_progress;
-
-                        responseReceivedTime = +new Date();
-                    })
-                        .catch(error => {
-                            console.log(error, error.response.data);
-                            this.errored = true;
-                            this.error = error.response.data;
-                            this.loading = false;
-                        });
-                },
-                getSpotifyEmbedURL(trackID) {
-                    return 'https://open.spotify.com/embed?uri=spotify:track:' + trackID + '&theme=white';
-                },
-                iframeLoaded(index) {
-                    this.iframesLoading[index] = false;
-                },
-                userHasCompletedBallot() {
-                    return this.voteData !== null && this.voteData.user_voting_progress.votes_total === this.voteData.user_voting_progress.votes_submitted;
-                },
-                keyPressed(evt) {
-                    if (evt.keyCode === 37) {
-                        this.sendVote(this.voteData.matchup.songs[0].id);
-                    }
-
-                    if (evt.keyCode === 39) {
-                        this.sendVote(this.voteData.matchup.songs[1].id);
-                    }
-                }
-            },
-            computed: {
-                errorMessage: function () {
-                    var msg = '';
-
-                    try {
-                        msg = this.error.message;
-
-                        if (this.error.errors) {
-                            Object.keys(this.error.errors).forEach(function(key) {
-
-                                var keyErrors = this.error.errors[key];
-                                for (var i = 0; i < keyErrors.length; i++) {
-                                    msg += ' ' + keyErrors[i];
-                                }
-
-                                // console.log(key, this.error.errors[key]);
-                            }, this, msg);
-                        }
-                    } catch(e) { }
-
-                    if(msg === '') msg = 'Unexpected error has occured!';
-
-                    return msg;
-                },
-                votingProgressPercentage: function () {
-                    if (this.votingProgress) {
-                        return ((100 * this.votingProgress.votes_submitted) / this.votingProgress.votes_total).toFixed(1);
-                    }
-
-                    return 0;
-                }
-            }
-        })
     </script>
 @endpush

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateVote;
 use App\Services\Songs as SongsService;
 use Artesaos\SEOTools\Traits\SEOTools;
-use Illuminate\Http\Request;
 use App\Models\Voting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +13,7 @@ use Debugbar;
 use App\Services\Voting as VotingService;
 use Carbon\Carbon;
 use Flash;
+use Illuminate\Support\Facades\Request;
 
 class VotingController extends Controller
 {
@@ -55,7 +55,7 @@ class VotingController extends Controller
             abort(403, 'Voting ballot is closed and you can no longer vote on it.');
         }
 
-        if ($request->input('voted_on') !== null) {
+        if (Request::isMethod('post')) {
 
             Voting\Votes::create([
                 'user_id' => Auth::user()->id,
@@ -102,7 +102,7 @@ class VotingController extends Controller
         ]);
     }
 
-    public function mystats($id, Request $request)
+    public function mystats($id)
     {
         $ballot = Voting::findOrFail($id);
 
@@ -124,7 +124,7 @@ class VotingController extends Controller
             ->with('stats', $stats);
     }
 
-    public function myhistory($id, Request $request)
+    public function myhistory($id)
     {
         $ballot = Voting::findOrFail($id);
 
