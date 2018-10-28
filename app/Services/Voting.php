@@ -11,11 +11,53 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Src\Rating;
 use Illuminate\Support\Facades\Log;
+use \App\Models\Voting as BallotModel;
 
 class Voting
 {
+    // TODO: Maybe use Model class instead of ID
+    public static function getMatchUp(BallotModel $ballot, $userID)
+    {
+        switch ($ballot->matchup_serve_method) {
+            case 1:
+                return self::getMatchUpRandom($ballot->id, $userID);
+                break;
+            case 2:
+                return self::getMatchUpByRandomOrLeastVotedSongs($ballot->id, $userID);
+                break;
+            default:
+                return self::getMatchUpByLeastVotedSongs($ballot->id, $userID);
+        }
+    }
 
-    public static function getMatchUp($votingBallotID, $userID)
+    public static function getMatchUpByRandomOrLeastVotedSongs($votingBallotID, $userID)
+    {
+        $methodDecider = random_int(0, 1);
+
+        if ($methodDecider === 0) {
+            return self::getMatchUpRandom($votingBallotID, $userID);
+        } else {
+            return self::getMatchUpByLeastVotedSongs($votingBallotID, $userID);
+        }
+    }
+
+    public static function getMatchUpRandom($votingBallotID, $userID)
+    {
+        return Matchups::select('voting_matchups.*', 'votesOne.*')
+            // votesOne is for getting all submitted votes by user_id
+            ->leftJoin(DB::raw('(SELECT `user_id`, `voting_matchup_id` FROM `votes` WHERE `user_id` = ' . $userID .') AS votesOne'),
+                function($join) {
+                    $join->on('votesOne.voting_matchup_id', '=', 'voting_matchups.id');
+                })
+            ->where('voting_matchups.voting_ballot_id', $votingBallotID)
+            ->where('votesOne.user_id', null)
+            ->where('votesOne.voting_matchup_id', null)
+            ->inRandomOrder()
+            ->limit(1)
+            ->get()->first();
+    }
+
+    public static function getMatchUpByLeastVotedSongs($votingBallotID, $userID)
     {
         // To future developer when this might become too taxing, maybe switch to old method where votes were given
         // based on least voted matchup, not least voted songs.

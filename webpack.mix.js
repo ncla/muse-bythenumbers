@@ -12,6 +12,7 @@ let mix = require('laravel-mix');
  */
 
 mix.js(['resources/assets/js/app.js'], 'public/js')
+    .js('resources/assets/js/admin/voting-ballot.js', 'public/js/admin')
     .sass('resources/assets/sass/app.scss', 'public/css')
     .options({
         processCssUrls: false

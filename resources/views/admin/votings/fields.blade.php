@@ -46,45 +46,10 @@
 
     @push('scripts')
         <script>
-            new Vue({
-                el: '#song-list',
-                data: {
-                    songsAvailable: {!! $songsAvailable !!},
-                    songsSelected: {!! $songsSelected !!}
-                },
-                computed: {
-                    orderedSongsAvailable: function () {
-                        return _.orderBy(this.songsAvailable, 'name')
-                    }
-                },
-                methods: {
-                    addToSongList: function(song, index) {
-                        this.songsSelected.push(song);
-                        this.songsAvailable = _.filter(this.songsAvailable, function(o) {
-                            return o.id !== song.id;
-                        });
-                    },
-                    removeFromSongList: function(song, index) {
-                        this.songsAvailable.push(song);
-                        this.songsSelected = _.filter(this.songsSelected, function(o) {
-                            return o.id !== song.id;
-                        });
-                    },
-                    addAllAvailable: function() {
-                        this.songsAvailable.forEach(function(element) {
-                            this.songsSelected.push(element);
-                        }, this);
-                        this.songsAvailable = [];
-                    },
-                    removeAllSelected: function () {
-                        this.songsSelected.forEach(function(element) {
-                            this.songsAvailable.push(element);
-                        }, this);
-                        this.songsSelected = [];
-                    }
-                }
-            })
+            var songsAvailable = {!! $songsAvailable !!};
+            var songsSelected = {!! $songsSelected !!};
         </script>
+        <script src="{{ mix('js/admin/voting-ballot.js') }}"></script>
     @endpush
 </div>
 
@@ -99,6 +64,11 @@
         {!! Form::hidden('is_open', 0) !!}
         {!! Form::checkbox('is_open', (isset($model) ? null : 1)) !!}
     </label>
+</div>
+
+<div class="mb-3">
+    {!! Form::label('matchup_serve_method', 'Matchup Serve Method ID:') !!}
+    {!! Form::text('matchup_serve_method', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Expires On Field -->

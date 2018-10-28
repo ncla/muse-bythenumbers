@@ -29,7 +29,7 @@
                 </span>
 
                 <span class="text-muted">
-                        You can use arrow keys on your key-board. Left arrow key for the song on the left (or the first one on the screen), right arrow button for the second song (right/bottom, depending on screen size).
+                        You can use arrow keys on your key-board. Left arrow key for the song on the left (or the first one on the screen), right arrow button for the second song (right/bottom, depending on screen size), up/down arrow keys skips the vote.
                 </span>
 
                 <div class="text-muted">

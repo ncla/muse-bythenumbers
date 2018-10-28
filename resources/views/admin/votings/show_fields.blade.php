@@ -28,16 +28,17 @@
         </div>
     </li>
     <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <style>
+            [v-cloak] {
+                display: none;
+            }
+        </style>
+
         <div id="matchups-list">
             <h6 class="my-0">{!! Form::label('matchups', 'Song matchups:') !!}</h6>
             <div>
                 <button type="button" class="btn btn-outline-secondary btn-sm" v-on:click="toggle">Show all {{ count($matchups) }} match-ups</button>
             </div>
-            <style>
-                [v-cloak] {
-                    display: none;
-                }
-            </style>
             <div v-show="isShown" v-cloak>
                     @foreach($matchups as $matchup)
                     <div>
@@ -48,25 +49,32 @@
 
         </div>
         @push('scripts')
-        <script>
-            new Vue({
-                el: '#matchups-list',
-                data: {
-                    isShown: false
-                },
-                methods: {
-                    toggle: function () {
-                        this.isShown = !this.isShown;
+            <script src="{{ mix('js/admin/voting-ballot.js') }}"></script>
+            <script>
+                new Vue({
+                    el: '#matchups-list',
+                    data: {
+                        isShown: false
+                    },
+                    methods: {
+                        toggle: function () {
+                            this.isShown = !this.isShown;
+                        }
                     }
-                }
-            })
-        </script>
+                })
+            </script>
         @endpush
     </li>
     <li class="list-group-item d-flex justify-content-between lh-condensed">
         <div>
             <h6 class="my-0">{!! Form::label('is_open', 'Is Open:') !!}</h6>
             <small class="text-muted">{!! $voting->is_open !!}</small>
+        </div>
+    </li>
+    <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <div>
+            <h6 class="my-0">{!! Form::label('matchup_serve_method', 'Matchup Serve Method:') !!}</h6>
+            <small class="text-muted">{!! $voting->matchup_serve_method !!}</small>
         </div>
     </li>
     <li class="list-group-item d-flex justify-content-between lh-condensed">

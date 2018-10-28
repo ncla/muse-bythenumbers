@@ -4,6 +4,7 @@
         <th>Description</th>
         <th>Songs</th>
         <th>Is Open</th>
+        <th>Matchup Serve Method</th>
         <th>Expires On</th>
         <th>Type</th>
         <th colspan="3">Action</th>
@@ -15,6 +16,7 @@
             <td>{!! $voting->description !!}</td>
             <td>{!! count($voting->songs) !!}</td>
             <td>{!! $voting->is_open !!}</td>
+            <td>{!! $voting->matchup_serve_method !!}</td>
             <td>{!! $voting->expires_on !!}</td>
             <td>{!! $voting->type !!}</td>
             <td>

@@ -31,8 +31,9 @@ class Voting extends Model
         'name',
         'description',
         'is_open',
+        'matchup_serve_method',
         'expires_on',
-        'type'
+        'type',
     ];
 
     /**
@@ -45,6 +46,7 @@ class Voting extends Model
         'name' => 'string',
         'description' => 'string',
         'is_open' => 'boolean',
+        'matchup_serve_method' => 'integer',
         'type' => 'string'
     ];
 

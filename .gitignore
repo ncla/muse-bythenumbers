@@ -3,8 +3,10 @@
 /public/storage
 /public/css/app.css
 /public/js/app.js
+/public/js/admin/*.js
 /public/mix-manifest.json
 /storage/*.key
+/storage/clockwork/*
 /vendor
 /.idea
 /.vscode

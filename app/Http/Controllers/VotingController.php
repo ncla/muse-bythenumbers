@@ -65,7 +65,7 @@ class VotingController extends Controller
 
         }
 
-        $matchup = $this->votingService->getMatchUp($ballot->id, Auth::user()->id);
+        $matchup = $this->votingService->getMatchUp($ballot, Auth::user()->id);
 
         $totalMatchUps = DB::table('voting_matchups')
                             ->select(DB::raw('COUNT(*) AS count'))
