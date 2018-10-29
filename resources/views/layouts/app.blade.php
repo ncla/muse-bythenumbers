@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 
     {!! SEO::generate() !!}
+
+    @include('layouts.tracking')
 </head>
 <body>
 
