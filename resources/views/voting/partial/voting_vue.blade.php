@@ -74,8 +74,7 @@
                     <div class="col-12 song-title text-lg-right">
                         <h2>@{{ loading ? "" : voteData.matchup.songs[0].name }}</h2>
                     </div>
-                </div>
-                <div class="row">
+
                     <div class="col-12 spotify-preview-container">
                         <div class="spotify-preview mb-2 float-lg-right mx-auto">
                             <iframe id="songA_frame" :src="getSpotifyEmbedURL(voteData.matchup.songs[0].spotify_track_id)" v-if="voteData && voteData.matchup.songs[0].spotify_track_id"
@@ -89,8 +88,6 @@
                         </div>
                     </div>
 
-                </div>
-                <div class="row">
                     <div class="col-12">
                         <button type="button" class="btn btn-block btn-outline-secondary float-lg-right vote-btn mx-auto"
                                 v-on:click="sendVote(voteData.matchup.songs[0].id)">Vote</button>
@@ -100,19 +97,16 @@
             </div>
 
             <div class="col-12 col-lg-2 versus-text align-self-center text-center">
-                <button type="button" class="btn btn-outline-secondary vote-btn mx-auto my-3 my-lg-0"
-                        v-on:click="skipVote()">Skip</button>
+                <button type="button" class="btn btn-outline-secondary vote-btn mx-auto my-3 my-lg-0" v-on:click="skipVote()">Skip</button>
             </div>
 
             <div class="col-12 col-lg-5 matchup-song-container songB p-3 text-center text-lg-left">
 
                 <div class="row">
-                    <div class="col-12 song-title">
+                    <div class="col-12 song-title order-1 order-lg-0">
                         <h2>@{{ loading ? "" : voteData.matchup.songs[1].name }}</h2>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 spotify-preview-container">
+                    <div class="col-12 spotify-preview-container order-2 order-lg-1">
                         <div class="spotify-preview mb-2 mx-auto mx-lg-0">
                             <iframe id="songB_frame" :src="getSpotifyEmbedURL(voteData.matchup.songs[1].spotify_track_id)" v-if="voteData && voteData.matchup.songs[1].spotify_track_id"
                                     height="80" frameborder="0" allowtransparency="true" allow="encrypted-media" v-on:load="iframeLoaded(1)"
@@ -125,13 +119,13 @@
                         </div>
                     </div>
 
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <button type="button" class="btn btn-block btn-outline-secondary vote-btn mx-auto mx-lg-0"
+                    <div class="col-12 order-0 order-lg-2">
+                        <button type="button" class="btn btn-block btn-outline-secondary vote-btn mx-auto mx-lg-0 mb-2 mb-lg-0"
                                 v-on:click="sendVote(voteData.matchup.songs[1].id)">Vote</button>
                     </div>
                 </div>
+
+
 
             </div>
         </div>
