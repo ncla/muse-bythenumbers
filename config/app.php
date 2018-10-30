@@ -169,7 +169,8 @@ return [
         InfyOm\CoreTemplates\CoreTemplatesServiceProvider::class,
 
         Yajra\DataTables\DataTablesServiceProvider::class,
-        App\Providers\NovaServiceProvider::class
+        App\Providers\NovaServiceProvider::class,
+        \Torann\GeoIP\GeoIPServiceProvider::class,
     ],
 
     /*
@@ -224,6 +225,7 @@ return [
         'Flash'     => Laracasts\Flash\Flash::class,
 
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
 
     ],
 

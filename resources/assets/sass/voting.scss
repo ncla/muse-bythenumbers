@@ -40,7 +40,7 @@ $loadingGradientColor: #f4f4f4;
       h2 {
         &:after {
 
-          @include loadingAfterElement(100%, 34px);
+          @include loadingAfterElement(100%, 2.16rem);
 
         }
       }

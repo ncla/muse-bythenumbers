@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasOne;
+use Jenssegers\Agent\Agent;
 
 class UserLogin extends Resource
 {
@@ -60,8 +61,15 @@ class UserLogin extends Resource
             BelongsTo::make('User', 'user')->displayUsing(function ($user) {
                 return $user->username;
             }),
-            Text::make('Browser Useragent'),
-            Text::make('IP Address'),
+            Text::make('Browser Useragent')->hideFromIndex(),
+            Text::make('Device', function () {
+                $agent = new Agent();
+                return $agent->browser($this->browser_useragent) . ', ' . $agent->platform($this->browser_useragent);
+            }),
+            Text::make('IP Address')->hideFromIndex(),
+            Text::make('Location', function () {
+                return GeoIP($this->ip_address)['country'] . ', ' . GeoIP($this->ip_address)['city'];
+            }),
             DateTime::make('Time', 'created_at'),
         ];
     }

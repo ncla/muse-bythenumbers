@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\Number;
+use Jenssegers\Agent\Agent;
 
 class UserFastVoters extends Resource
 {
@@ -63,8 +64,15 @@ class UserFastVoters extends Resource
             }),
             Number::make('Diff Server', 'time_between_votes'),
             Number::make('Diff Client', 'time_between_votes_client'),
-            Text::make('Browser Useragent'),
-            Text::make('IP Address'),
+            Text::make('Device', function () {
+                $agent = new Agent();
+                return $agent->browser($this->browser_useragent) . ', ' . $agent->platform($this->browser_useragent);
+            }),
+            Text::make('Browser Useragent')->hideFromIndex(),
+            Text::make('Location', function () {
+                return GeoIP($this->ip_address)['country'] . ', ' . GeoIP($this->ip_address)['city'];
+            }),
+            Text::make('IP Address')->hideFromIndex(),
             DateTime::make('Time', 'created_at'),
         ];
     }
