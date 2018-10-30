@@ -98,7 +98,14 @@ if(document.getElementById('voting')) {
                     responseReceivedTime = +new Date();
 
                     try {
-                        ga('send', 'pageview', `/voting-ballots/${ballotId}/vote`);
+                        var tracker = ga.getAll()[0];
+
+                        if (tracker) {
+                            tracker.send("event", {
+                                eventCategory: 'Voting',
+                                eventAction: 'Vote'
+                            });
+                        }
                     } catch(e) {}
 
                 }).catch(error => {
