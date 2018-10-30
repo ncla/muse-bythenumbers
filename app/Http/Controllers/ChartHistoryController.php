@@ -38,7 +38,11 @@ class ChartHistoryController extends Controller
 
             $item->each(function($it, $ke) use($timeline) {
                 if (isset($timeline[$it->timestamp])) {
-                    $timeline[$it->timestamp] = [$it->timestamp, $it->chart_index];
+                    $timeline[$it->timestamp] = [
+                        'x' => $it->timestamp,
+                        'y' => $it->chart_index,
+                        'listeners_7day' => $it->listeners_week
+                    ];
                 }
             });
 

@@ -60,9 +60,8 @@
                             },
                             tooltip: {
                                 headerFormat: '<b>{series.name}</b><br>',
-                                pointFormat: '{point.x:%Y-%m-%d}: <b>{point.y}</b>'
+                                pointFormat: 'Date: <b>{point.x:%Y-%m-%d}</b><br/>Chart Index: <b>{point.y}</b><br/>Listeners (7 days): <b>{point.listeners_7day}</b>'
                             },
-
                             plotOptions: {
                                 spline: {
                                     marker: {
