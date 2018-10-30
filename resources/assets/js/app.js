@@ -96,6 +96,11 @@ if(document.getElementById('voting')) {
                     this.votingProgress = response.data.user_voting_progress;
 
                     responseReceivedTime = +new Date();
+
+                    try {
+                        ga('send', 'pageview', `/voting-ballots/${ballotId}/vote`);
+                    } catch(e) {}
+
                 }).catch(error => {
                     console.log(error, error.response.data);
                     this.errored = true;
