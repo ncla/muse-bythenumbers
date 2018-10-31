@@ -71,15 +71,9 @@ class LoginController extends Controller
 
     protected function findOrCreateRedditUser($redditUser)
     {
-        $user = User::firstOrNew(['username' => $redditUser->nickname]);
-
-        if($user->exists) return $user;
-
-        $user->fill([
-            'username' => $redditUser->nickname,
-            'avatar' => $redditUser->user['icon_img']
-        ])->save();
-
-        return $user;
+        return User::updateOrCreate(
+            ['username' => $redditUser->nickname],
+            ['avatar' => strtok($redditUser->user['icon_img'], '?')]
+        );
     }
 }

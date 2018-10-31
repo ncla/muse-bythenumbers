@@ -23,7 +23,7 @@
                 <div class="row">
                         <div class="col-12">
 
-                                <table class="table table-bordered table-sm table-hover table-xs dt-responsive" id="stats">
+                                <table class="table table-bordered table-sm table-hover table-xs dt-responsive" id="precalculated-stats">
                                         <thead>
                                         <th>Name</th>
                                         <th>Total Votes</th>
@@ -116,12 +116,12 @@
                 @push('scripts')
                         <script>
                             $(document).ready(function () {
-                                $('#stats').DataTable({
+                                $('#stats, #precalculated-stats').DataTable({
                                     aLengthMenu: [
                                         [25, 50, 100, 200, -1],
                                         [25, 50, 100, 200, "All"]
                                     ],
-                                    iDisplayLength: -1
+                                    iDisplayLength: 25
                                 });
                             });
                         </script>
