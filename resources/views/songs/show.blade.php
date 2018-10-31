@@ -41,12 +41,12 @@
                 </div>
 
                 @push('scripts')
-                    <script src="//code.highcharts.com/highcharts.js"></script>
+                    <script src="//code.highcharts.com/stock/highstock.js"></script>
                 @endpush
 
                 @if(count($statsSetlistAppearance['years']) > 0)
                     <div class="col-12">
-                        <div id="performanceCountChartcontainer" style=" height: 250px; margin: 0 auto"></div>
+                        <div id="performanceCountChartcontainer" style=" height: 250px; margin: 0 auto" class="my-2"></div>
                     </div>
 
                     @push('scripts')
@@ -55,7 +55,8 @@
                             Highcharts.chart('performanceCountChartcontainer', {
                                 chart: {
                                     type: 'column',
-                                    marginTop: 25
+                                    marginTop: 25,
+                                    zoomType: 'x'
                                 },
                                 title: {
                                     text: null
@@ -116,7 +117,7 @@
             @if(count($lastfmListenerHistory['listeners']) > 0)
                 <div class="row">
                     <div class="col-12">
-                        <div id="lastfmListenerscontainer" style=" height: 250px; margin: 0 auto"></div>
+                        <div id="lastfmListenerscontainer" style=" height: 250px; margin: 0 auto" class="my-2"></div>
                     </div>
                 </div>
 
@@ -124,7 +125,13 @@
                     <script>
                         Highcharts.chart('lastfmListenerscontainer', {
                             chart: {
-                                marginTop: 25
+                                marginTop: 35,
+                                zoomType: 'x'
+                            },
+                            navigator: {
+                                enabled: true,
+                                height: 30,
+                                margin: 6
                             },
                             title: {
                                 text: null
@@ -132,9 +139,10 @@
                             xAxis: {
                                 type: 'datetime',
                                 title: {
-                                    text: 'Date'
+                                    text: null
                                 },
-                                crosshair: true
+                                crosshair: true,
+                                range: 2 * 30 * 24 * 3600 * 1000
                             },
                             tooltip: {
                                 shared: true
@@ -162,10 +170,22 @@
                                 series: {
                                     label: {
                                         connectorAllowed: false
+                                    },
+                                    lineWidth: 1,
+                                    animation: false,
+                                    marker: {
+                                        enabled: true,
+                                        radius: 2,
+                                        symbol: 'circle'
+                                    },
+                                    states: {
+                                        hover: {
+                                            enabled: false,
+                                            lineWidthPlus: 2
+                                        }
                                     }
                                 }
                             },
-
                             series: [
                                 {
                                     name: 'Listeners (7 days)',
@@ -185,9 +205,7 @@
                                     },
                                     chartOptions: {
                                         legend: {
-                                            layout: 'horizontal',
-                                            align: 'center',
-                                            verticalAlign: 'bottom'
+                                            enabled: false
                                         }
                                     }
                                 }]
