@@ -85,7 +85,18 @@
                                     showInNavigator: true
                                 }
                             },
-
+                            responsive: {
+                                rules: [{
+                                    condition: {
+                                        maxWidth: 500
+                                    },
+                                    chartOptions: {
+                                        legend: {
+                                            enabled: false
+                                        }
+                                    }
+                                }]
+                            },
                             zoomType: 'Y',
                             series: {!! $chart !!}
                         });
