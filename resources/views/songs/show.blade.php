@@ -242,54 +242,67 @@
                     </script>
                 @endpush
 
-                <div class="col-12 col-md-6">
-                    @if(count($setlistPrevNextTrack['prev']) > 0)
-                        <table class="table table-bordered table-sm table-xs table-hover table-lookaround-setlist-entries-only-five" id="preceding_setlist_table">
-                            <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Count</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($setlistPrevNextTrack['prev'] as $songName => $entries)
-                                <tr @if(($loop->index + 1) > 5) class="more-than-five" @endif>
-                                    <td @if($songName === '') class="font-italic" @endif>{{ $songName === '' ? 'None' : $songName }}</td>
-                                    <td>{{ count($setlistPrevNextTrack['prev'][$songName]) }}</td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    @else
+                @if(count($setlistPrevNextTrack['prev']) === 0 && count($setlistPrevNextTrack['next']) === 0)
+
+                    <div class="col-12">
                         <div class="bg-white text-center p-2 my-1 border">
                             No data.
                         </div>
-                    @endif
-                </div>
-                <div class="col-12 col-md-6">
-                    @if(count($setlistPrevNextTrack['next']) > 0)
-                        <table class="table table-bordered table-sm table-xs table-hover table-lookaround-setlist-entries-only-five" id="following_setlist_table">
-                            <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Count</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($setlistPrevNextTrack['next'] as $songName => $entries)
-                                <tr @if(($loop->index + 1) > 5) class="more-than-five" @endif>
-                                    <td @if($songName === '') class="font-italic" @endif>{{ $songName === '' ? 'None' : $songName }}</td>
-                                    <td>{{ count($setlistPrevNextTrack['next'][$songName]) }}</td>
+                    </div>
+
+                @else
+
+                    <div class="col-12 col-md-6">
+                        @if(count($setlistPrevNextTrack['prev']) > 0)
+                            <table class="table table-bordered table-sm table-xs table-hover table-lookaround-setlist-entries-only-five" id="preceding_setlist_table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Count</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <div class="bg-white text-center p-2 my-1 border">
-                            No data.
-                        </div>
-                    @endif
-                </div>
+                                </thead>
+                                <tbody>
+                                @foreach($setlistPrevNextTrack['prev'] as $songName => $entries)
+                                    <tr @if(($loop->index + 1) > 5) class="more-than-five" @endif>
+                                        <td @if($songName === '') class="font-italic" @endif>{{ $songName === '' ? 'None' : $songName }}</td>
+                                        <td>{{ count($setlistPrevNextTrack['prev'][$songName]) }}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="bg-white text-center p-2 my-1 border">
+                                No data.
+                            </div>
+                        @endif
+                    </div>
+                    <div class="col-12 col-md-6">
+                        @if(count($setlistPrevNextTrack['next']) > 0)
+                            <table class="table table-bordered table-sm table-xs table-hover table-lookaround-setlist-entries-only-five" id="following_setlist_table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Count</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($setlistPrevNextTrack['next'] as $songName => $entries)
+                                    <tr @if(($loop->index + 1) > 5) class="more-than-five" @endif>
+                                        <td @if($songName === '') class="font-italic" @endif>{{ $songName === '' ? 'None' : $songName }}</td>
+                                        <td>{{ count($setlistPrevNextTrack['next'][$songName]) }}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="bg-white text-center p-2 my-1 border">
+                                No data.
+                            </div>
+                        @endif
+                    </div>
+
+                @endif
+
             </div>
 
         </div>
