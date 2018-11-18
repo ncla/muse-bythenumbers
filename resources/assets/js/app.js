@@ -9,6 +9,7 @@ require('./bootstrap');
 require('popper.js');
 require('axios/dist/axios.min');
 require('datatables.net-bs4/js/dataTables.bootstrap4.min');
+window.fitty = require('./vendor/fitty.js').default;
 
 import Vue from 'vue'
 
@@ -89,6 +90,8 @@ if(document.getElementById('voting')) {
                     this.voteData = response.data;
                     this.loading = false;
 
+                    fitty.fitAll();
+
                     if (this.voteData.matchup.matchup_data !== null) {
                         document.addEventListener('keyup', this.keyPressed);
                     }
@@ -109,7 +112,7 @@ if(document.getElementById('voting')) {
                     } catch(e) {}
 
                 }).catch(error => {
-                    console.log(error, error.response.data);
+                    console.log(error);
                     this.errored = true;
                     this.error = error.response.data;
                     this.loading = false;
@@ -178,4 +181,7 @@ if(document.getElementById('voting')) {
             }
         }
     })
+
+    var fitties = fitty('.flexFont', {multiLine: true, minSize: 1, maxSize: 30, parentHeightEl: 'div'});
+
 }

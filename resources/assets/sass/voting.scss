@@ -3,7 +3,8 @@ $loadingGradientColor: #f4f4f4;
 @mixin loadingAfterElement($width, $height) {
   content: "";
   display: block;
-  width: $width;
+  max-width: $width;
+  width: 100%;
   height: $height;
 
   background-repeat: no-repeat, no-repeat;
@@ -20,6 +21,18 @@ $loadingGradientColor: #f4f4f4;
 }
 
 #voting {
+  .song-title {
+    height: 2.16rem;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+
+    h2 {
+      display: inline-block;
+      white-space: nowrap;
+      margin-bottom: 0;
+      line-height: 2.16rem;
+    }
+  }
   .matchup-song-container {
     background: #f4f4f4;
     border-radius: 3px;
@@ -36,20 +49,15 @@ $loadingGradientColor: #f4f4f4;
 
   &.loading {
 
-    .song-title {
-      h2 {
-        &:after {
+    .song-title .title-loading {
+      height: 2.16rem;
 
-          @include loadingAfterElement(100%, 2.16rem);
-
-        }
+      &:after {
+        @include loadingAfterElement(100%, 2.16rem);
       }
     }
-    .spotify-preview {
-      //iframe {
-      //  width: auto;
-      //}
 
+    .spotify-preview {
       &:after {
         top: 0;
         position: absolute;
@@ -71,8 +79,10 @@ $loadingGradientColor: #f4f4f4;
   }
 
   .spotify-preview {
-    width: 300px;
+    max-width: 300px;
+    width: 100%;
     height: 80px;
+    overflow: hidden;
 
     .no-spotify-preview {
       background: #ffffff;

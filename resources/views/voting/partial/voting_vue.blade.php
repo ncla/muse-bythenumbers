@@ -72,7 +72,10 @@
 
                 <div class="row">
                     <div class="col-12 song-title text-lg-right">
-                        <h2>@{{ loading ? "" : voteData.matchup.songs[0].name }}</h2>
+                        <div v-show="!loading">
+                            <h2 class="flexFont">@{{ loading ? "" : voteData.matchup.songs[0].name }}</h2>
+                        </div>
+                        <div v-show="loading" class="title-loading"></div>
                     </div>
 
                     <div class="col-12 spotify-preview-container">
@@ -104,7 +107,10 @@
 
                 <div class="row">
                     <div class="col-12 song-title order-1 order-lg-0">
-                        <h2>@{{ loading ? "" : voteData.matchup.songs[1].name }}</h2>
+                        <div v-show="!loading">
+                            <h2 class="flexFont">@{{ loading ? "" : voteData.matchup.songs[1].name }}</h2>
+                        </div>
+                        <div v-show="loading" class="title-loading"></div>
                     </div>
                     <div class="col-12 spotify-preview-container order-2 order-lg-1">
                         <div class="spotify-preview mb-2 mx-auto mx-lg-0">
