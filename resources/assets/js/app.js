@@ -67,6 +67,10 @@ if(document.getElementById('voting')) {
                 this.loading = true;
                 this.iframesLoading[0] = this.iframesLoading[1] = true;
 
+                $('audio').each((i, v) => {
+                     $(v)[0].pause();
+                });
+
                 document.removeEventListener('keyup', this.keyPressed);
 
                 var postData = {};

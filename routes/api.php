@@ -12,30 +12,3 @@ use App\Models\Setlist;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-//
-//Route::get('/setlists', function (Request $request) {
-//    return App\Setlist::orderBy('date', 'desc')
-//        ->limit(10)
-//        ->get();
-//});
-//
-//Route::get('/setlist/{id}', function (Request $request, $id) {
-//    //DB::enableQueryLog();
-//    $test = App\Setlist::find($id);
-//    $test->songs;
-//
-//    return $test;
-//
-//    //dd(DB::getQueryLog());
-//
-//});
-//
-//Route::get('/songs', function (Request $request) {
-//    return App\Setlist::orderBy('date', 'desc')
-//        ->limit(10)
-//        ->get();
-//});

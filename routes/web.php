@@ -16,9 +16,10 @@ Route::get('/', 'Statistics@show');
 Route::get('/debug', 'Statistics@debug');
 
 Route::get('/members/login', 'Auth\LoginController@redirectToProvider')->name('login');
+Route::get('/members/settings', 'SettingsController@index')->middleware('auth');
+Route::post('/members/settings/update', 'SettingsController@update')->middleware('auth');
 
 Route::get('/members/login/callback', 'Auth\LoginController@handleProviderCallback');
-
 Route::get('/members/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/voting-ballots/', 'VotingController@index');

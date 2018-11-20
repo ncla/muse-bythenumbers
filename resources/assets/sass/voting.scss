@@ -92,6 +92,15 @@ $loadingGradientColor: #f4f4f4;
     }
   }
 
+  .audio-mp3-preview {
+
+    audio {
+      max-width: 300px;
+      width: 100%;
+    }
+
+  }
+
   .btn-outline-secondary {
     &:focus {
       box-shadow: none;

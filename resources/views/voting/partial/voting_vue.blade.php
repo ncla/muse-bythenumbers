@@ -25,6 +25,7 @@
     </div>
 </div>
 
+
 <div id="voting" data-ballot-id="{{ $ballot->id }}" class="container mt-1" v-bind:class="{ loading: loading }" v-cloak>
     <div class="row" v-if="errored && error !== null">
         <div class="col-12">
@@ -52,20 +53,21 @@
 
     <div v-else>
 
-        <div class="row mb-2">
-            <div class="progress w-100 position-relative">
-                <div class="progress-bar" role="progressbar" v-bind:style="{ width: votingProgressPercentage + '%'}" v-bind:aria-valuenow="votingProgressPercentage" aria-valuemin="0" aria-valuemax="100"></div>
-                <div class="justify-content-center d-flex position-absolute w-100 h-100 align-items-center">
-                    <div class="d-flex">
-                                <span class="voting-progress-text">
-                                    @{{ votingProgressPercentage }}% complete
-                                    <span v-if="votingProgress !== null"> (@{{ votingProgress.votes_submitted }} / @{{ votingProgress.votes_total }})</span>
-                                </span>
+        @if((settings('voting_progressbar') ?? '1') === '1')
+            <div class="row mb-2">
+                <div class="progress w-100 position-relative">
+                    <div class="progress-bar" role="progressbar" v-bind:style="{ width: votingProgressPercentage + '%'}" v-bind:aria-valuenow="votingProgressPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="justify-content-center d-flex position-absolute w-100 h-100 align-items-center">
+                        <div class="d-flex">
+                                    <span class="voting-progress-text">
+                                        @{{ votingProgressPercentage }}% complete
+                                        <span v-if="votingProgress !== null"> (@{{ votingProgress.votes_submitted }} / @{{ votingProgress.votes_total }})</span>
+                                    </span>
+                        </div>
                     </div>
                 </div>
-                {{--<span></span>--}}
             </div>
-        </div>
+        @endif
 
         <div class="row">
             <div class="col-12 col-lg-5 matchup-song-container songA p-3 text-center text-lg-left">
@@ -77,6 +79,8 @@
                         </div>
                         <div v-show="loading" class="title-loading"></div>
                     </div>
+
+                    @if((settings('voting_embed') ?? '1') === '1')
 
                     <div class="col-12 spotify-preview-container">
                         <div class="spotify-preview mb-2 float-lg-right mx-auto">
@@ -90,6 +94,20 @@
                             </div>
                         </div>
                     </div>
+
+                    @endif
+
+                    @if((settings('voting_embed') ?? '1') === '2')
+
+                    <div class="col-12 audio-mp3-preview text-lg-right mb-2">
+
+                        <div class="embed-responsive-16by9">
+                            <audio controls class="embed-responsive-item" v-bind:src="voteData ? voteData.matchup.songs[0].preview_url_mp3 : ''" v-bind:muted="loading"></audio>
+                        </div>
+
+                    </div>
+
+                    @endif
 
                     <div class="col-12">
                         <button type="button" class="btn btn-block btn-outline-secondary float-lg-right vote-btn mx-auto"
@@ -112,18 +130,35 @@
                         </div>
                         <div v-show="loading" class="title-loading"></div>
                     </div>
-                    <div class="col-12 spotify-preview-container order-2 order-lg-1">
-                        <div class="spotify-preview mb-2 mx-auto mx-lg-0">
-                            <iframe id="songB_frame" :src="getSpotifyEmbedURL(voteData.matchup.songs[1].spotify_track_id)" v-if="voteData && voteData.matchup.songs[1].spotify_track_id"
-                                    height="80" frameborder="0" allowtransparency="true" allow="encrypted-media" v-on:load="iframeLoaded(1)"
-                                    v-show="!loading && !iframesLoading[1]"></iframe>
-                            <div v-else class="no-spotify-preview container align-items-center justify-content-center">
-                                <div class="row align-items-center justify-content-center h-100">
-                                    No Spotify preview available
+
+                    @if((settings('voting_embed') ?? '1') === '1')
+
+                        <div class="col-12 spotify-preview-container order-2 order-lg-1">
+                            <div class="spotify-preview mb-2 float-lg-left mx-auto">
+                                <iframe id="songA_frame" :src="getSpotifyEmbedURL(voteData.matchup.songs[1].spotify_track_id)" v-if="voteData && voteData.matchup.songs[1].spotify_track_id"
+                                        height="80" frameborder="0" allowtransparency="true" allow="encrypted-media" v-on:load="iframeLoaded(1)"
+                                        v-show="!loading && !iframesLoading[1]"></iframe>
+                                <div v-else class="no-spotify-preview container align-items-center justify-content-center">
+                                    <div class="row align-items-center justify-content-center h-100">
+                                        No Spotify preview available
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                    @endif
+
+                    @if((settings('voting_embed') ?? '1') === '2')
+
+                        <div class="col-12 audio-mp3-preview mb-2 order-2 order-lg-1">
+
+                            <div class="embed-responsive-16by9">
+                                <audio controls class="embed-responsive-item" v-bind:src="voteData ? voteData.matchup.songs[1].preview_url_mp3 : ''" v-bind:muted="loading"></audio>
+                            </div>
+
+                        </div>
+
+                    @endif
 
                     <div class="col-12 order-0 order-lg-2">
                         <button type="button" class="btn btn-block btn-outline-secondary vote-btn mx-auto mx-lg-0 mb-2 mb-lg-0"

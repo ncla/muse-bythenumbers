@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
+use App\Settings;
 
 class User extends Authenticatable
 {
@@ -24,6 +25,7 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'avatar',
+        'settings',
         'remember_token'
     ];
 
@@ -36,7 +38,8 @@ class User extends Authenticatable
         'id' => 'integer',
         'username' => 'string',
         'avatar' => 'string',
-        'remember_token' => 'string'
+        'remember_token' => 'string',
+        'settings' => 'json'
     ];
 
     /**
@@ -56,5 +59,15 @@ class User extends Authenticatable
     public function logins()
     {
         return $this->hasMany('App\Models\Users\Logins');
+    }
+
+    /**
+     * Get the user settings.
+     *
+     * @return Settings
+     */
+    public function settings()
+    {
+        return new Settings($this->settings, $this);
     }
 }

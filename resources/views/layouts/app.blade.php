@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {!! SEO::generate() !!}
 
@@ -87,6 +88,7 @@
                                 <div class="dropdown-divider"></div>
                             @endif
 
+                            <a class="dropdown-item" href="{{ action('SettingsController@index') }}">Settings</a>
                             <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
                         </div>
                     </li>

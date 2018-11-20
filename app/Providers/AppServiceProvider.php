@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Settings;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,5 +29,9 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment() !== 'production') {
             $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         }
+
+        $this->app->singleton('App\Settings', function() {
+            return (Auth::guest() === true ? new Settings([]) : Auth::user()->settings());
+        });
     }
 }
