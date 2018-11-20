@@ -58,34 +58,6 @@ class SetlistController extends AppBaseController
     }
 
     /**
-     * Show the form for creating a new Setlist.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('setlists.create');
-    }
-
-    /**
-     * Store a newly created Setlist in storage.
-     *
-     * @param CreateSetlistRequest $request
-     *
-     * @return Response
-     */
-    public function store(CreateSetlistRequest $request)
-    {
-        $input = $request->all();
-
-        $setlist = $this->setlistRepository->create($input);
-
-        Flash::success('Setlist saved successfully.');
-
-        return redirect(route('setlists.index'));
-    }
-
-    /**
      * Display the specified Setlist.
      *
      * @param  int $id
@@ -109,72 +81,4 @@ class SetlistController extends AppBaseController
             ->with('setlist', $setlist);
     }
 
-    /**
-     * Show the form for editing the specified Setlist.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $setlist = $this->setlistRepository->findWithoutFail($id);
-
-        if (empty($setlist)) {
-            Flash::error('Setlist not found');
-
-            return redirect(route('setlists.index'));
-        }
-
-        return view('setlists.edit')->with('setlist', $setlist);
-    }
-
-    /**
-     * Update the specified Setlist in storage.
-     *
-     * @param  int              $id
-     * @param UpdateSetlistRequest $request
-     *
-     * @return Response
-     */
-    public function update($id, UpdateSetlistRequest $request)
-    {
-        $setlist = $this->setlistRepository->findWithoutFail($id);
-
-        if (empty($setlist)) {
-            Flash::error('Setlist not found');
-
-            return redirect(route('setlists.index'));
-        }
-
-        $setlist = $this->setlistRepository->update($request->all(), $id);
-
-        Flash::success('Setlist updated successfully.');
-
-        return redirect(route('setlists.index'));
-    }
-
-    /**
-     * Remove the specified Setlist from storage.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        $setlist = $this->setlistRepository->findWithoutFail($id);
-
-        if (empty($setlist)) {
-            Flash::error('Setlist not found');
-
-            return redirect(route('setlists.index'));
-        }
-
-        $this->setlistRepository->delete($id);
-
-        Flash::success('Setlist deleted successfully.');
-
-        return redirect(route('setlists.index'));
-    }
 }

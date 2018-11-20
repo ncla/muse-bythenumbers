@@ -58,4 +58,5 @@ Route::group(['middleware' => 'can:manage-songs'], function() {
     Route::resource('admin/songs', 'Admin\SongsController');
 });
 
-Route::resource('setlists', 'SetlistController');
+Route::get('/setlists/', 'SetlistController@index')->name('setlists.index');
+Route::get('/setlists/{id}', 'SetlistController@show')->name('setlists.show');
