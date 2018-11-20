@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Models\Voting;
 use App\Services\Voting as VotingService;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
