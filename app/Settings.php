@@ -111,8 +111,6 @@ class Settings
             array_only($attributes, $this->allowed)
         );
 
-        //dd(array_only($attributes, array_keys($this->settings)), $attributes, $this->settings);
-
         return $this->persist();
     }
 
