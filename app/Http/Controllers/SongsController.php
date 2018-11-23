@@ -17,6 +17,8 @@ class SongsController extends Controller
     {
         $song = Songs::findOrFail($id);
 
+
+        // TODO: Find ways to rewrite all this in Eloquent, maybe.. depending on performance.
         $setlistApperances = DB::table('setlist_songs')
                                 ->select('setlist_songs.name', DB::raw('COUNT(*) as playcount'), DB::raw('YEAR(setlists.date) as year'))
                                 ->where('name', $song->setlistName)
@@ -24,6 +26,7 @@ class SongsController extends Controller
                                 ->groupBy(DB::raw('YEAR(setlists.date)'))
                                 ->orderBy('setlists.date')
                                 ->where('setlists.is_utilized', '=', 1)
+                                ->whereNull('setlists.deleted_at')
                                 ->get();
 
         $setlistApperancesYears = $setlistApperances->pluck('year');
@@ -34,6 +37,7 @@ class SongsController extends Controller
                                     ->groupBy(DB::raw('YEAR(setlists.date)'))
                                     ->orderBy('setlists.date')
                                     ->where('is_utilized', '=', 1)
+                                    ->whereNull('setlists.deleted_at')
                                     ->get();
 
         $totalGigsPerYear = $totalGigsPerYear->keyBy('year');
@@ -56,6 +60,7 @@ class SongsController extends Controller
                                     ->join('setlists', 'A.id', '=', 'setlists.id')
                                     ->where('A.name', $song->setlistName)
                                     ->where('setlists.is_utilized', '=', 1)
+                                    ->whereNull('setlists.deleted_at')
                                     ->get();
 
         $previousOnly = $lookAroundSongsSetlist->groupBy('previous')->sortByDesc(function ($entries) {

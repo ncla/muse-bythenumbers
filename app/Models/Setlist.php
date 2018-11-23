@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Yadakhov\InsertOnDuplicateKey;
 
 class Setlist extends Model
 {
     use InsertOnDuplicateKey;
+    use SoftDeletes;
 
     protected $table = 'setlists';
 
@@ -43,6 +45,13 @@ class Setlist extends Model
      * @var array
      */
     public static $rules = [];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 
     public function songs()
     {

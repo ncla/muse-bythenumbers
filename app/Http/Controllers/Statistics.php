@@ -18,6 +18,8 @@ class Statistics extends Controller
         $years = DB::select('SELECT `a`.`year` FROM (
                             SELECT `setlist_songs`.`name`, DATE_FORMAT(`setlists`.`date`, "%Y") as year FROM `setlist_songs`
                             INNER JOIN `setlists` ON `setlist_songs`.`id` = `setlists`.`id`
+                            WHERE `setlists`.`is_utilized` = 1
+                            AND `setlists`.`deleted_at` IS NULL
                             GROUP BY `year`, `name`
                             ) a
                             INNER JOIN `musicbrainz_songs`
@@ -59,8 +61,11 @@ class Statistics extends Controller
                 })->toArray())
                 ->join('setlists', 'setlist_songs.id', 'setlists.id')
                 ->groupBy(['setlist_songs.name'])
+                ->whereRaw('setlists.is_utilized = 1')
+                ->whereNull('setlists.deleted_at')
                 ->toSql() . ') AS performances'), 'performances.name', '=',
-                    DB::raw('COALESCE(musicbrainz_songs.name_setlistfm_override, musicbrainz_songs.name_override, musicbrainz_songs.name)'))
+                    DB::raw('COALESCE(musicbrainz_songs.name_setlistfm_override, musicbrainz_songs.name_override, musicbrainz_songs.name)')
+            )
             ->where('musicbrainz_songs.is_utilized', '=', '1')
             ->orderBy('musicbrainz_songs.name');
 
@@ -90,6 +95,8 @@ class Statistics extends Controller
         $totalGigsPerYear = DB::table('setlists')
             ->select(DB::raw('DATE_FORMAT(`setlists`.`date`, "%Y") as `year`'), DB::raw('COUNT(*) as total_gigs'))
             ->groupBy(['year'])
+            ->where('setlists.is_utilized', '=', '1')
+            ->whereNull('deleted_at')
             ->get();
 
         $totalGigsPerYear = $totalGigsPerYear->keyBy('year');

@@ -37,18 +37,18 @@ Route::get('chart-history/spotify', 'ChartHistoryController@showSpotifyTop10');
 
 Route::view('about', 'about');
 
-Route::group(['middleware' => 'can:manage-voting-ballots'], function() {
+Route::group(['middleware' => ['can:manage-voting-ballots', 'auth']], function() {
     Route::resource('admin/votings', 'Admin\VotingController');
 
     Route::get('admin/votings/{id}/stats', 'Admin\VotingController@showStats');
     Route::get('admin/votings/{id}/calculate', 'Admin\VotingController@calculate');
 });
 
-Route::group(['middleware' => 'can:manage-users'], function() {
+Route::group(['middleware' => ['can:manage-users', 'auth']], function() {
     Route::resource('admin/users', 'Admin\UserController');
 });
 
-Route::group(['middleware' => 'can:manage-songs'], function() {
+Route::group(['middleware' => ['can:manage-songs', 'auth']], function() {
     Route::get('admin/songs/bulk', 'Admin\SongsController@bulkIndex')->name('admin.songs.bulk');
     Route::patch('admin/songs/bulk', 'Admin\SongsController@bulkPatch')->name('admin.songs.bulk.patch');
 
@@ -60,3 +60,10 @@ Route::group(['middleware' => 'can:manage-songs'], function() {
 
 Route::get('/setlists/', 'SetlistController@index')->name('setlists.index');
 Route::get('/setlists/{id}', 'SetlistController@show')->name('setlists.show');
+
+Route::group(['middleware' => ['can:manage-setlists', 'auth']], function() {
+    Route::get('/setlists/{id}/refresh', 'SetlistController@refresh');
+    Route::get('/setlists/{id}/delete', 'SetlistController@delete');
+    Route::get('/setlists/{id}/restore', 'SetlistController@restore');
+    Route::get('/setlists/{id}/utilize', 'SetlistController@utilize');
+});

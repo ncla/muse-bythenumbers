@@ -36,6 +36,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('scrape:spotifytracks')
             ->mondays()->at('00:02');
 
+        $schedule->command('scrape:setlistfm')
+            ->mondays()->at('02:23');
+
         $schedule->call(function() {
             Log::debug('Running voting ballot pre-calc task');
             // Check all voting ballots that have ended, if they don't have pre-calculated public data, pre-calculate

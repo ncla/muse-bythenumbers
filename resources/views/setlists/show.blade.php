@@ -19,24 +19,64 @@
     </div>
 
     <div class="container mt-3 pb-2">
-                <div class="row">
-                    <div class="col-12 mb-2">
-                        <ul class="list-group setlist">
-                            @php
-                                $i = 0;
-                            @endphp
+
+        @include('flash::message')
+
+        @if($setlist->trashed())
+            <div class="alert alert-warning" role="alert">
+                You are viewing a deleted set-list. Possible reasons: invalid set-list, non-public gig (e.g. TV performance), duplicate, playback performance.
+            </div>
+        @endif
+
+        @if($setlist->is_utilized === false)
+            <div class="alert alert-warning" role="alert">
+                You are viewing a set-list which data is not being utilized on the site. Possible reasons: non-public gig (e.g. TV performance), playback performance, one song gig.
+            </div>
+        @endif
+
+        <div class="row">
+
+            @can('manage-setlists')
+                <div class="col-12 mb-2">
+                    <div class="p-3 bg-white border border-light rounded">
+                        <div>
+                            <strong>Manage:</strong>
+                        </div>
+                        <div>
+                            <a type="button" class="btn btn-danger btn-sm mb-1" href="{{ action('SetlistController@refresh', $setlist->id) }}">Refresh</a>
+                            @if($setlist->trashed())
+                                <a type="button" class="btn btn-danger btn-sm mb-1" href="{{ action('SetlistController@restore', $setlist->id) }}">Restore</a>
+                            @else
+                                <a type="button" class="btn btn-danger btn-sm mb-1" href="{{ action('SetlistController@delete', $setlist->id) }}">Delete</a>
+                            @endif
+
+                            <a type="button" class="btn btn-danger btn-sm mb-1" href="{{ action('SetlistController@utilize', [$setlist->id, 'set' => !$setlist->is_utilized]) }}">
+                                Mark As {{ $setlist->is_utilized == 1 ? 'Irrelevant' : 'Relevant' }}
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            @endcan
+
+            <div class="col-12 mb-2">
+                <ul class="list-group setlist">
+                    @php
+                        $i = 0;
+                    @endphp
 
                     @foreach($setlist->songs()->get() as $setlistSong)
                         @php
-                        if($setlistSong->tape !== 1) {
-                            $i++;
-                        }
+                            if ($setlistSong->tape !== 1) {
+                                $i++;
+                            }
                         @endphp
                         <li class="list-group-item">
-                            @if(!$loop->first && $setlistSong->order_nr_in_set === 0)
+                            @if($i !== 0 && $setlistSong->order_nr_in_set === 0 && $setlistSong->encore !== 0)
                                 <small class="font-weight-bold">Encore {{ $setlistSong->encore }}</small>
                             @endif
-                            <p class="m-0 font-weight-bold">@if($setlistSong->tape !== 1){{ $i }}. @else 🖭 @endif {{ $setlistSong->name }}</p>
+                            <p class="m-0 font-weight-bold">@if($setlistSong->tape !== 1){{ $i }}. @else
+                                    📼 @endif {{ $setlistSong->name }}</p>
                             @if($setlistSong->note)
                                 <small>{{ $setlistSong->note }}</small>
                             @endif

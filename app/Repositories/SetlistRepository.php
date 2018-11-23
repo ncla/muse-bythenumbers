@@ -33,4 +33,17 @@ class SetlistRepository extends BaseRepository
     {
         return Setlist::class;
     }
+
+    public function findWithoutFailWithTrashed($id, $columns = ['*'])
+    {
+        $this->scopeQuery(function($query) {
+            return $query->withTrashed();
+        });
+
+        try {
+            return $this->find($id, $columns);
+        } catch (Exception $e) {
+            return;
+        }
+    }
 }

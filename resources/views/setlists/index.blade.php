@@ -65,9 +65,7 @@
         <div class="row">
             <div class="col-12">
                 @foreach($setlists as $setlist)
-                        {{--{{ json_encode($setlist->venue) }} }}--}}
                         <div class="card mb-2">
-                            {{--<img class="card-img-top" src="..." alt="Card image cap">--}}
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <a href="/setlists/{!! $setlist->id !!}">
@@ -80,7 +78,26 @@
                                         <span class="pr-1 font-weight-light">{{ $song->name }}</span>
                                     @endforeach
                                 </div>
-                                <a href="/setlists/{!! $setlist->id !!}" class="btn btn-primary btn-sm">View</a>
+                                <div>
+                                    <a href="/setlists/{!! $setlist->id !!}" class="btn btn-primary btn-sm mb-1">View</a>
+
+                                    @can('manage-setlists')
+
+                                        <a type="button" class="btn btn-danger btn-sm mb-1" href="{{ action('SetlistController@refresh', $setlist->id) }}">Refresh</a>
+
+                                        @if($setlist->trashed())
+                                            <a type="button" class="btn btn-danger btn-sm mb-1" href="{{ action('SetlistController@restore', $setlist->id) }}">Restore</a>
+                                        @else
+                                            <a type="button" class="btn btn-danger btn-sm mb-1" href="{{ action('SetlistController@delete', $setlist->id) }}">Delete</a>
+                                        @endif
+
+                                        <a type="button" class="btn btn-danger btn-sm mb-1" href="{{ action('SetlistController@utilize', [$setlist->id, 'set' => !$setlist->is_utilized]) }}">
+                                            Mark As {{ $setlist->is_utilized == 1 ? 'Irrelevant' : 'Relevant' }}
+                                        </a>
+
+                                    @endcan
+                                </div>
+
                             </div>
                         </div>
                 @endforeach
