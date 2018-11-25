@@ -135,9 +135,11 @@ table.table-xs {
       min-height: inherit;
     }
 
-    h1 {
+    h1, h6 {
       background: #eeeeee;
       padding: 0.2rem 0.8rem;
+      // https://css-tricks.com/injecting-line-break/
+      display: table;
     }
 
     .album-artwork-img {

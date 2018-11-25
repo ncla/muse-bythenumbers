@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Voting;
 
 class Statistics extends Controller
 {
@@ -69,22 +70,13 @@ class Statistics extends Controller
             ->where('musicbrainz_songs.is_utilized', '=', '1')
             ->orderBy('musicbrainz_songs.name');
 
-        // Get voting ballot result, that is 1. public 2. newest by creation date (voting ballot)
-        // Preferably should cache the fuck out of this?
-        $votingResultId = DB::table('voting_ballots')
-            ->select('voting_ballot_results.id', 'voting_ballot_results.created_at')
-            ->join('voting_ballot_results', 'voting_ballot_results.voting_ballot_id', '=', 'voting_ballots.id')
-            ->where('voting_ballot_results.public', '=', true)
-            ->orderByDesc('voting_ballots.created_at')
-            ->orderByDesc('voting_ballot_results.created_at')
-            ->limit(1)
-            ->get()->first();
+        $votingResultId = Voting::getMostRecentPublicVotingBallotResultId();
 
         if ($votingResultId !== null) {
             $works->leftJoin(DB::raw('('.
                 DB::table('voting_ballot_song_results')
                     ->select('*')
-                    ->whereRaw('voting_ballot_song_results.voting_results_id = ' . $votingResultId->id)->toSql()
+                    ->whereRaw('voting_ballot_song_results.voting_results_id = ' . $votingResultId)->toSql()
                 .') as voting_ballot_song_results'), 'voting_ballot_song_results.song_id', '=', 'musicbrainz_songs.id')
                 ->addSelect('voting_ballot_song_results.winrate', 'voting_ballot_song_results.elo_rank', 'voting_ballot_song_results.total_votes',
                     'voting_ballot_song_results.votes_won', 'voting_ballot_song_results.votes_lost');

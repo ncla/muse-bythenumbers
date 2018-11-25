@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Src\Rating;
 use Illuminate\Support\Facades\Log;
 use \App\Models\Voting as BallotModel;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class Voting
 {
@@ -310,6 +311,89 @@ class Voting
         }
 
         return $votes->get();
+    }
+
+    /**
+     * Get voting ballot result id, that is 1. public 2. newest by creation date (voting ballot and voting ballot result)
+     *
+     * @return null|integer
+     */
+    public static function getMostRecentPublicVotingBallotResultId()
+    {
+        $result =  DB::table('voting_ballots')
+            ->select('voting_ballot_results.id', 'voting_ballot_results.created_at')
+            ->join('voting_ballot_results', 'voting_ballot_results.voting_ballot_id', '=', 'voting_ballots.id')
+            ->where('voting_ballot_results.public', '=', true)
+            ->orderByDesc('voting_ballots.created_at')
+            ->orderByDesc('voting_ballot_results.created_at')
+            ->limit(1)
+            ->get()->first();
+
+        return $result !== null ? $result->id : null;
+    }
+
+    /**
+     * Get x amount of songs around x song in song result placements, given that you have Result model
+     *
+     * @param Result $votingResultModel
+     * @param integer $songId
+     * @param string $property
+     * @param int $amount Amount of entries you want around
+     * @return EloquentCollection|bool Eloquent collection or boolean (false) if song couldn't be find in results
+     */
+    public static function getSongsAroundIndexInSongResults(Result $votingResultModel, $songId, $property, $amount = 4)
+    {
+        $votingResultModel = clone $votingResultModel;
+        // Get all song results, sort by elo_rank because that's how we are gonna look around for previous/next items
+        $allSongResults = $votingResultModel->songResults->sortByDesc($property)->values();
+
+        // Need placement number for showing in table view. Cloning is there to prevent referencing wrong $placement,
+        // otherwise when you run this method more than once, it gets placements wrong
+        $allSongResults = $allSongResults->transform(function ($placement, $placementNr) {
+            $placement = clone $placement;
+            $placement['placement'] = $placementNr;
+            return $placement;
+        });
+
+        // Pull out our song for future reference
+        $songStats = $allSongResults->where('song_id', $songId);
+
+        if ($songStats->count() === 0) {
+            return false;
+        }
+
+        // Get index of it so we can slice the array by index
+        $indexOfSong = $songStats->keys()->first();
+
+        // Slice the amount of items we need and remove the index item itself
+        // Now we have all possible next items
+        $next = $allSongResults->slice($indexOfSong, ($amount + 1), true)->forget($indexOfSong);
+
+        // Since we can't really use slice() again with negative value, we now take that same untouched collection and reverse it.
+        $reversed = $allSongResults->reverse()->values();
+        // Get the index again so we can slice()
+        $reversedId = $reversed->where('song_id', $songId)->keys()->first();
+        // Slice the amount of items we need and remove the index item itself.
+        // Now we have all the possible previous items
+        $previous = $reversed->slice($reversedId, ($amount + 1), true)->forget($reversedId)->reverse();
+
+        // Because we sliced excessive amount (we only need 4 items around our song), we need to cut the fat
+        // So we while() loop until we meet our desired amount of item count,
+        // and remove item from collection that has more items, so it's evenly distributed
+        while (($previous->count() + $next->count()) > $amount) {
+            if ($next->count() > $previous->count()) {
+                $next->pop();
+            } else {
+                $previous->shift();
+            }
+        }
+
+        // We merge everything together (previous, next, and our song), and then sort it
+        $merged = $next->merge($previous);
+        // We sort by `placement` attribute to prevent from incorrectly sorting in cases where there are two items with same value
+        $merged = $merged->merge($songStats)->sortBy('placement')->values();
+
+        return $merged;
     }
 
 }

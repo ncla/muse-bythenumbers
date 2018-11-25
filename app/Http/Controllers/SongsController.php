@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Setlist;
 use App\Models\SetlistSong;
 use App\Models\Songs;
+use App\Models\Voting\Results;
+use App\Services\Voting;
 use Artesaos\SEOTools\Traits\SEOTools;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +18,6 @@ class SongsController extends Controller
     public function show($id)
     {
         $song = Songs::findOrFail($id);
-
 
         // TODO: Find ways to rewrite all this in Eloquent, maybe.. depending on performance.
         $setlistApperances = DB::table('setlist_songs')
@@ -71,6 +72,18 @@ class SongsController extends Controller
             return count($entries);
         });
 
+        $votingResultId = Voting::getMostRecentPublicVotingBallotResultId();
+
+        if ($votingResultId) {
+            $votingResultModel = Results::with('songResults', 'songResults.song')->find($votingResultId);
+
+            if ($votingResultModel) {
+                $songsAroundByEloRank = Voting::getSongsAroundIndexInSongResults($votingResultModel, $id, 'elo_rank', 4);
+                $songsAroundByWinrate = Voting::getSongsAroundIndexInSongResults($votingResultModel, $id, 'winrate', 4);
+                $individualSong = $votingResultModel->songResults->where('song_id', $id)->first();
+            }
+        }
+
         $lastFmListenersHistory = DB::table('lastfm_tracks')
                                             ->select('*')
                                             ->orderBy('created_at')
@@ -105,6 +118,9 @@ class SongsController extends Controller
                 'chart_index' => $lastFmListenersHistory->map(function($item) {
                     return [strtotime($item->created_at) * 1000, $item->chart_index];
                 })
-            ]);
+            ])
+            ->with('songsAroundByElo', $songsAroundByEloRank)
+            ->with('songsAroundByWinrate', $songsAroundByWinrate)
+            ->with('votingIndividualSongResult', $individualSong);
     }
 }

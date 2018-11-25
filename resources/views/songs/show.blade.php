@@ -11,7 +11,20 @@
                     <div class="row h-100">
                         <div class="col-12 d-flex align-items-center">
                             <img src="{{ $albumImageUrl }}" class="img-fluid img-thumbnail album-artwork-img"/>
-                            <h1 class="my-3 ml-3">{{ $song->name }}</h1>
+                            <div>
+                                <h1 class="mt-3 mb-1 ml-3">{{ $song->name }}</h1>
+
+                                @if($votingIndividualSongResult)
+                                <h6 class="ml-3">
+                                    <small>
+                                        <span class="font-weight-bold">ELO rank:</span> {{ $votingIndividualSongResult->elo_rank }}
+                                        | <span class="font-weight-bold">Win-rate:</span> {{ $votingIndividualSongResult->winrate }}%
+                                    </small>
+                                </h6>
+                                @endif
+
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -35,6 +48,76 @@
         @endif
 
         <div class="container mt-1 pb-5">
+            @if($songsAroundByElo && $songsAroundByWinrate)
+
+            <div class="row">
+
+                <div class="col-12 col-md-6">
+                    <strong>Placement in latest voting ballot by ELO Rank</strong>
+
+                    @if($songsAroundByElo)
+
+                    <table class="table table-bordered table-sm table-xs table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Song</th>
+                            <th scope="col">Rank</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($songsAroundByElo as $entry)
+                            <tr @if($song->id === $entry->song_id) class="font-weight-bold" @endif>
+                                <td>{{ ($entry->placement + 1) }}</td>
+                                <td>{{ $entry->song->name }}</td>
+                                <td>{{ $entry->elo_rank }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+
+                    @else
+                        <div class="bg-white text-center p-2 my-1 border">
+                            No data.
+                        </div>
+                    @endif
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <strong>Placement in latest voting ballot by win-rate %</strong>
+
+                    @if($songsAroundByWinrate)
+
+                    <table class="table table-bordered table-sm table-xs table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Song</th>
+                            <th scope="col">Win-rate %</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($songsAroundByWinrate as $entry)
+                            <tr @if($song->id === $entry->song_id) class="font-weight-bold" @endif>
+                                <td>{{ ($entry->placement + 1) }}</td>
+                                <td>{{ $entry->song->name }}</td>
+                                <td>{{ $entry->winrate }}%</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+
+                    @else
+                        <div class="bg-white text-center p-2 my-1 border">
+                            No data.
+                        </div>
+                    @endif
+                </div>
+
+            </div>
+
+            @endif
+
             <div class="row">
                 <div class="col-12">
                     <strong>Total performance count per year</strong>
