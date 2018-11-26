@@ -32,6 +32,9 @@
                 };
 
                 var t = $('#mainStatisticsTable').DataTable({
+                    initComplete: function (settings, json) {
+                        $('body').tooltip({selector: '[data-toggle="tooltip"]'});
+                    },
                     aLengthMenu: [
                         [25, 50, 100, 200, -1],
                         [25, 50, 100, 200, "All"]
@@ -121,10 +124,4 @@
             </table>
         </div>
     </div>
-
-    @push('scripts')
-        <script>
-            $('body').tooltip({selector: '[data-toggle="tooltip"]'});
-        </script>
-    @endpush
 @endsection
