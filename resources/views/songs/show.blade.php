@@ -69,7 +69,7 @@
                         @foreach($songsAroundByElo as $entry)
                             <tr @if($song->id === $entry->song_id) class="font-weight-bold" @endif>
                                 <td>{{ ($entry->placement + 1) }}</td>
-                                <td>{{ $entry->song->name }}</td>
+                                <td><a href="/songs/{{ $entry->song->id }}/{{ rawurlencode($entry->song->name) }}">{{ $entry->song->name }}</a></td>
                                 <td>{{ $entry->elo_rank }}</td>
                             </tr>
                         @endforeach
@@ -100,7 +100,7 @@
                         @foreach($songsAroundByWinrate as $entry)
                             <tr @if($song->id === $entry->song_id) class="font-weight-bold" @endif>
                                 <td>{{ ($entry->placement + 1) }}</td>
-                                <td>{{ $entry->song->name }}</td>
+                                <td><a href="/songs/{{ $entry->song->id }}/{{ rawurlencode($entry->song->name) }}">{{ $entry->song->name }}</a></td>
                                 <td>{{ $entry->winrate }}%</td>
                             </tr>
                         @endforeach
