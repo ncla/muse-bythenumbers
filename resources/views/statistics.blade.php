@@ -111,9 +111,24 @@
                                 $totalPerf = $work->{'total_' . $year->year};
                                 $totalGigs = $years_total_gigs[$year->year]->total_gigs;
                                 $percentageOfGigs = (($totalGigs === 0 || $totalPerf === 0) ? 0 : ($totalPerf / $totalGigs) * 100);
+
+                                // Questionable view logic here
+                                if ($percentageOfGigs == 0) {
+                                    $class = '0';
+                                } else if($percentageOfGigs > 0 && $percentageOfGigs <= 25) {
+                                    $class = 'lt25';
+                                } else if($percentageOfGigs > 25 && $percentageOfGigs <= 50) {
+                                    $class = 'lt50';
+                                } else if($percentageOfGigs > 50 && $percentageOfGigs <= 75) {
+                                    $class = 'lt75';
+                                } else if($percentageOfGigs > 75) {
+                                    $class = 'lt100';
+                                }
                             @endphp
                             <td data-toggle="tooltip" data-html="true"
-                                title="{{ $totalPerf }}/{{ $totalGigs }} ({{ round($percentageOfGigs, 2) }}%)">
+                                title="{{ $totalPerf }}/{{ $totalGigs }} ({{ round($percentageOfGigs, 2) }}%)"
+                                class="percentage-of-gigs-{{ $class }}"
+                            >
                                 {{ $totalPerf != 0 ? $work->{'total_' . $year->year} : '' }}
                             </td>
                         @endforeach

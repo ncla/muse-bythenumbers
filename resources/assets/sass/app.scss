@@ -116,6 +116,23 @@ table.table-xs {
     }
   }
 
+  td {
+
+    &.percentage-of-gigs-lt25 {
+      background: rgba(255, 222, 170, 1);
+    }
+    &.percentage-of-gigs-lt50 {
+      background: rgba(255, 251, 170, 1);
+    }
+    &.percentage-of-gigs-lt75 {
+      background: rgba(207, 236, 157, 1);
+    }
+    &.percentage-of-gigs-lt100 {
+      background: rgba(110, 164, 152, 1);
+    }
+
+  }
+
 }
 
 
