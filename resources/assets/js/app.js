@@ -39,6 +39,16 @@ if(document.getElementById('voting')) {
         voteVue.skipVote();
     });
 
+    document.addEventListener('play', function (e) {
+        var audios = document.getElementsByTagName('audio');
+        for (var i = 0, len = audios.length; i < len; i++) {
+            if (audios[i] !== e.target) {
+                audios[i].pause();
+            }
+        }
+
+    }, true);
+
     var responseReceivedTime = null;
 
     var voteVue = new Vue({
@@ -184,7 +194,7 @@ if(document.getElementById('voting')) {
                 return 0;
             }
         }
-    })
+    });
 
     var fitties = fitty('.flexFont', {multiLine: true, minSize: 1, maxSize: 30, parentHeightEl: 'div'});
 
